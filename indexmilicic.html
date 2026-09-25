@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prototipo · Ecosistema digital de aplicaciones de obra · Milicic S.A.</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B2229; --ground:#F3F1EC; --card:#FFFFFF; --line:#DDD8CE; --muted:#5B6168; --soft:#3A4148;
+  --accent:#B8430F; --accent-dark:#8A2E07; --accent-bg:#FBE3D3;
+  --ok-bg:#DCEBDF; --ok:#1F5A2E; --info-bg:#DCE6F7; --info:#173F86;
+  --brand:#FF6B00; --brand-ink:#240805;
+  --display:'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:#E7E3DA;color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+button,input{font-family:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* Página contenedora */
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;max-width:1400px;margin:0 auto;padding:24px 32px}
+.wordmark{font-family:var(--display);font-weight:700;font-size:30px;color:var(--brand);letter-spacing:.01em;line-height:1}
+.for{font-size:14px;color:var(--soft)}
+.for strong{color:var(--brand-ink)}
+.intro{max-width:1400px;margin:0 auto;padding:8px 32px 32px;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.intro h1{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(36px,5vw,60px);line-height:1;color:var(--brand-ink);max-width:18ch}
+.intro p{margin:0;max-width:62ch;color:var(--soft);font-size:17px}
+
+.stage{max-width:1400px;margin:0 auto;padding:0 32px 48px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:48px;align-items:start}
+.guide{display:flex;flex-direction:column;gap:20px;padding-top:12px;max-width:520px}
+.guide h2{margin:0;font-family:var(--display);font-size:28px;color:var(--brand-ink)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:start}
+.steps li::before{content:counter(s);width:40px;height:40px;border-radius:50%;background:var(--brand-ink);color:#fff;font-family:var(--display);font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center}
+.steps strong{display:block;font-size:16px}
+.steps span{color:var(--soft);font-size:15px}
+.note{font-size:14px;color:var(--muted);border-top:1px solid #CFC9BD;padding-top:16px}
+
+.web-wrap{max-width:1400px;margin:0 auto;padding:0 32px 56px;display:flex;flex-direction:column;gap:16px}
+.web-wrap h2{margin:0;font-family:var(--display);font-size:28px;color:var(--brand-ink)}
+.web-wrap > p{margin:0;color:var(--soft);max-width:70ch}
+.scroll-x{overflow-x:auto;border-radius:18px;box-shadow:0 1px 0 #CFC9BD}
+
+footer{background:var(--brand);color:#fff}
+footer .in{max-width:1400px;margin:0 auto;padding:28px 32px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer .claim{font-family:var(--display);font-weight:700;font-size:26px;color:var(--brand-ink)}
+footer .meta{font-size:14px;color:var(--brand-ink)}
+
+@media (max-width: 960px){
+  .stage{grid-template-columns:minmax(0,1fr);justify-items:center;gap:32px}
+  .guide{order:-1;max-width:none;width:100%}
+  .top,.intro,.stage,.web-wrap{padding-left:20px;padding-right:20px}
+}
+
+/* Teléfono */
+.phone{width:390px;max-width:100%;height:844px;border-radius:40px;background:#111;padding:10px;box-shadow:0 30px 60px -30px rgba(36,8,5,.45)}
+.screen{position:relative;width:100%;height:100%;border-radius:31px;overflow:hidden;background:var(--ground);display:flex;flex-direction:column}
+@media (max-width: 430px){.phone{height:760px;border-radius:32px;padding:8px}.screen{border-radius:25px}}
+
+.app-head{background:var(--ink);color:var(--ground);padding:20px 18px 16px;display:flex;flex-direction:column;gap:12px}
+.app-head .row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.app-head .brand{font-size:12px;color:#C9C4B8}
+.app-head .obra{font-family:var(--display);font-weight:700;font-size:25px;line-height:1.1}
+.app-head .who{font-size:13px;color:#C9C4B8}
+.sig-btn{min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid #4A545E;background:#26303A;color:var(--ground);font-size:12px;font-weight:600;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;align-self:flex-start}
+.pill.on{background:var(--info-bg);color:var(--info)}
+.pill.off{background:var(--accent-bg);color:var(--accent-dark)}
+
+.app-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:16px}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.kpi b{font-family:var(--display);font-size:28px;line-height:1.1}
+.kpi span{font-size:12px;color:var(--muted)}
+.primary{min-height:56px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+.primary:disabled{background:#9A9C9E;cursor:not-allowed}
+.sec-title{font-family:var(--display);font-weight:600;font-size:19px;margin:0}
+.item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.item .t{font-weight:600;font-size:15px}
+.item .s{font-size:13px;color:var(--muted)}
+.tag{font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px;white-space:nowrap}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.q{background:var(--accent-bg);color:var(--accent-dark)}
+.back{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.form-head{display:flex;align-items:center;gap:10px}
+.form-head h3{margin:0;font-family:var(--display);font-size:24px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field > label,.field > .lbl{font-size:13px;font-weight:600;color:var(--soft)}
+.eq{min-height:48px;text-align:left;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:15px;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%}
+.eq small{font-size:12px;color:var(--muted)}
+.eq[aria-pressed="true"]{border:2px solid var(--accent);background:#FFF4EC;font-weight:600}
+.eq[aria-pressed="true"] small{color:var(--accent-dark)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.inp{min-height:48px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid #BDB7AB;background:var(--card);font-size:17px;color:var(--ink)}
+.warn{padding:10px 12px;border-radius:10px;background:var(--accent-bg);color:var(--accent-dark);font-size:13px;line-height:1.4}
+.good{font-size:13px;color:var(--ok)}
+.chk{min-height:48px;display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:15px;color:var(--ink);text-align:left;width:100%}
+.box{width:24px;height:24px;flex-shrink:0;border-radius:6px;border:2px solid #8A8F95;display:flex;align-items:center;justify-content:center;color:#fff}
+.chk[aria-pressed="true"] .box{background:var(--ok);border-color:var(--ok)}
+.fotos{display:flex;gap:8px;flex-wrap:wrap}
+.foto{width:72px;height:72px;border-radius:10px;background:repeating-linear-gradient(45deg,#E4DFD4,#E4DFD4 6px,#EEEAE1 6px,#EEEAE1 12px);border:1px solid var(--line);display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-size:11px;color:var(--soft)}
+.add{width:72px;height:72px;border-radius:10px;border:1px dashed #8A8F95;background:var(--card);color:var(--soft);font-size:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.firma{min-height:72px;border-radius:10px;border:1px dashed #8A8F95;background:var(--card);color:var(--soft);font-size:15px;width:100%;display:flex;align-items:center;justify-content:center}
+.firma.done{border-style:solid;border-color:var(--line);cursor:default}
+.hint{font-size:12px;color:var(--muted);text-align:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.kv{display:flex;justify-content:space-between;font-size:14px}
+.kv span{color:var(--muted)}
+.kv b{font-weight:600}
+.uid{font-size:12px;color:var(--muted);font-family:ui-monospace,'SF Mono',Consolas,monospace}
+.explain{padding:12px 14px;border-radius:12px;background:#E9E5DC;font-size:13px;line-height:1.5;color:var(--soft)}
+.allgood{padding:14px;border-radius:12px;background:var(--ok-bg);color:var(--ok);font-size:14px}
+.toast{position:absolute;left:14px;right:14px;bottom:88px;padding:12px 14px;border-radius:12px;background:var(--ink);color:var(--ground);font-size:14px;line-height:1.4;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);background:var(--card);padding:6px 8px 12px}
+.nav button{min-height:56px;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+.nav button[aria-current="page"]{color:var(--accent)}
+
+/* Panel web */
+.web{width:1280px;min-height:780px;display:flex;background:var(--ground)}
+.side{width:240px;flex-shrink:0;background:var(--ink);color:var(--ground);padding:28px 16px;display:flex;flex-direction:column;gap:28px}
+.side .b{padding:0 8px}
+.side .b small{display:block;font-size:12px;color:#C9C4B8}
+.side .b span{font-family:var(--display);font-weight:700;font-size:24px}
+.side nav{display:flex;flex-direction:column;gap:4px}
+.side nav a{padding:10px 12px;border-radius:8px;color:#C9C4B8;text-decoration:none;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.side nav a.cur{background:#2E3842;color:#fff;font-weight:600}
+.badge{background:var(--accent);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px}
+.main{flex:1;padding:32px 40px;display:flex;flex-direction:column;gap:24px}
+.main h3{margin:0;font-family:var(--display);font-size:34px;line-height:1.1}
+.main .sub{margin:4px 0 0;font-size:14px;color:var(--muted)}
+.cols{display:flex;gap:24px;align-items:flex-start}
+.list{width:320px;flex-shrink:0;display:flex;flex-direction:column;gap:10px}
+.list h4{margin:0;font-size:14px;font-weight:600;color:var(--muted)}
+.list h4.mt{margin-top:12px}
+.case{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.case.sel{border:2px solid var(--accent)}
+.case .t{font-weight:600;font-size:15px}
+.case .s{font-size:13px;color:var(--muted);line-height:1.45}
+.detail{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:20px}
+.detail h4{margin:0;font-family:var(--display);font-size:28px}
+.rule{padding:12px 16px;border-radius:10px;background:#E9E5DC;font-size:14px;line-height:1.5;color:var(--soft)}
+.versions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ver{border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.ver.rev{border-color:var(--accent);background:#FFF8F3}
+.ver .h{font-size:13px;font-weight:600;color:var(--muted)}
+.ver.rev .h{color:var(--accent-dark)}
+.ver .v{font-family:var(--display);font-weight:700;font-size:44px;line-height:1}
+.ver ul{margin:0;padding:0;list-style:none;font-size:13px;color:var(--soft);display:flex;flex-direction:column;gap:3px}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-dark{min-height:48px;padding:0 20px;border:none;border-radius:10px;background:var(--ink);color:#fff;font-size:15px;font-weight:600}
+.btn-line{min-height:48px;padding:0 20px;border:1px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink);font-size:15px;font-weight:600}
+.btn-soft{min-height:48px;padding:0 20px;border:1px solid #BDB7AB;border-radius:10px;background:#fff;color:var(--soft);font-size:15px}
+.result{padding:14px 16px;border-radius:10px;background:var(--ok-bg);color:var(--ok);font-size:14px;font-weight:600}
+.audit{padding:12px 16px;border-radius:10px;border:1px solid var(--line);font-size:13px;color:var(--soft);line-height:1.6}
+/* Agregados v2 */
+.login{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:56px 28px 36px;background:var(--ink);color:var(--ground)}
+.login .mk{font-family:var(--display);font-weight:700;font-size:44px;letter-spacing:.06em;line-height:1}
+.login .tag2{font-size:15px;color:#C9C4B8;margin-top:8px}
+.login .box2{display:flex;flex-direction:column;gap:14px}
+.login .ms{min-height:56px;border:none;border-radius:12px;background:#fff;color:var(--ink);font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px}
+.login small{font-size:12px;color:#A9A49A;text-align:center;line-height:1.4}
+.portal-head{background:var(--ink);color:var(--ground);padding:22px 18px 18px;display:flex;flex-direction:column;gap:4px}
+.portal-head .hi{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1}
+.portal-head .sub2{font-size:13px;color:#C9C4B8}
+.appcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;align-items:center;gap:14px}
+.appicon{width:52px;height:52px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff}
+.appcard .t{font-weight:600;font-size:16px}
+.appcard .s{font-size:13px;color:var(--muted)}
+.appcard .grow{flex:1;min-width:0}
+.mini{min-height:40px;padding:0 14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600}
+.mini.ghost{background:#fff;border:1px solid var(--ink);color:var(--ink)}
+.proj{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;color:var(--ink);min-height:64px}
+.proj .t{font-weight:600;font-size:15px}
+.proj .s{font-size:13px;color:var(--muted)}
+.role{font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px;background:#E9E5DC;color:var(--soft);white-space:nowrap}
+.linkbtn{background:none;border:none;color:#C9C4B8;font-size:13px;padding:6px 0;text-decoration:underline;text-underline-offset:3px;align-self:flex-start;min-height:32px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tile{min-height:76px;border-radius:12px;border:1px solid var(--line);background:var(--card);padding:12px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:6px;text-align:left;color:var(--ink);font-size:14px;font-weight:600}
+.tile svg{color:var(--accent)}
+.tile.main{background:var(--accent);border-color:var(--accent);color:#fff}
+.tile.main svg{color:#fff}
+.infonote{padding:12px 14px;border-radius:12px;background:#E9E5DC;font-size:13px;color:var(--soft);line-height:1.45}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tabs button{min-height:44px;padding:0 16px;border:none;background:none;font-size:15px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.side nav button{padding:10px 12px;border-radius:8px;color:#C9C4B8;font-size:14px;display:flex;justify-content:space-between;align-items:center;background:none;border:none;text-align:left;width:100%}
+.side nav button.cur{background:#2E3842;color:#fff;font-weight:600}
+.person{display:flex;align-items:center;gap:14px}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
+.atable{width:100%;border-collapse:collapse;font-size:14px}
+.atable th{text-align:left;font-size:13px;color:var(--muted);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line)}
+.atable td{padding:10px 12px;white-space:normal;border-bottom:1px solid var(--line);vertical-align:middle}
+.sel{min-height:40px;padding:0 10px;border-radius:8px;border:1px solid #BDB7AB;background:#fff;font-size:14px;color:var(--ink);font-family:inherit}
+.twocol{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:20px;align-items:start}
+.api{background:var(--ink);color:#E8E4DB;border-radius:12px;padding:16px;font-family:ui-monospace,'SF Mono',Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre;overflow-x:auto;margin:0}
+.api .k{color:#F4B287}
+.row2{display:flex;gap:8px;flex-wrap:wrap}
+.log{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--soft)}
+.log div{padding:8px 10px;border-radius:8px;background:#F7F5F0;border:1px solid var(--line)}
+.flash{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600}
+.flash.ok{background:var(--ok-bg);color:var(--ok)}
+.flash.wait{background:var(--accent-bg);color:var(--accent-dark)}
+.hint2{font-size:13px;color:var(--muted);margin:0}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wordmark" aria-label="Voolkia">Voolkia</div>
+  <div class="for">Prototipo para <strong>Milicic S.A.</strong></div>
+</header>
+
+<section class="intro">
+  <h1>Un solo acceso, permisos por obra y carga sin señal</h1>
+  <p>Prototipo navegable del ecosistema propuesto: portal de aplicaciones, app de campo y plataforma web central. Los datos son de ejemplo y se ajustan al relevamiento con Milicic.</p>
+</section>
+
+<section class="stage">
+  <div class="phone" aria-label="App móvil">
+    <div class="screen" id="app"></div>
+  </div>
+  <div class="guide">
+    <h2>Probalo en cinco pasos</h2>
+    <ol class="steps">
+      <li><div><strong>Iniciá sesión en el portal</strong><span>Con la cuenta corporativa, una sola vez. El portal muestra solo las aplicaciones habilitadas para vos.</span></div></li>
+      <li><div><strong>Abrí Partes de obra y elegí una obra</strong><span>J. Pérez es Supervisor en Añelo y Operador en San Juan. Entrá a las dos: las funciones disponibles cambian según el rol en cada obra.</span></div></li>
+      <li><div><strong>Cortá la señal y cargá un parte</strong><span>Tocá "Simular sin señal", cargá un parte diario y mirá cómo queda en cola, guardado en el teléfono.</span></div></li>
+      <li><div><strong>Recuperá la señal</strong><span>Todo se envía solo, sin duplicados.</span></div></li>
+      <li><div><strong>Cambiá un rol desde la plataforma web</strong><span>Abajo, en Usuarios y asignaciones, cambiale el rol a J. Pérez. Si el teléfono tiene señal, la app se actualiza al instante; si no, en la próxima sincronización.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="web-wrap">
+  <h2>Plataforma web central</h2>
+  <p>Administra usuarios, obras, aplicaciones y roles para todo el ecosistema, expone la consulta de permisos que usa cada aplicación y concentra la revisión de inconsistencias.</p>
+  <div class="scroll-x"><div class="web" id="web"></div></div>
+</section>
+
+<footer>
+  <div class="in">
+    <div class="claim">Ponemos tu proyecto Up &amp; Running.</div>
+    <div class="meta">voolkia.com · Argentina, Uruguay, USA</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function svg(p,w){w=w||20;return '<svg width="'+w+'" height="'+w+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';}
+  var I={
+    wifi:svg('<path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1"/>',16),
+    nowifi:svg('<path d="M3 3l18 18"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1"/>',16),
+    back:svg('<path d="M15 6l-6 6 6 6"/>',18),
+    check:svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>',16),
+    cam:svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
+    home:svg('<path d="M4 11l8-6 8 6v8H4z"/>',22),
+    doc:svg('<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 8h6"/><path d="M9 12h6"/><path d="M9 16h3"/>',22),
+    sync:svg('<path d="M20 8a8 8 0 0 0-14.5-2.5"/><path d="M4 4v4h4"/><path d="M4 16a8 8 0 0 0 14.5 2.5"/><path d="M20 20v-4h-4"/>',22),
+    fuel:svg('<path d="M4 20V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v15"/><path d="M3 20h12"/><path d="M14 9h2a2 2 0 0 1 2 2v5a1.5 1.5 0 0 0 3 0V8l-3-3"/><path d="M7 8h4"/>'),
+    list:svg('<path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M4 6l1 1 2-2"/><path d="M4 12l1 1 2-2"/><path d="M4 18l1 1 2-2"/>'),
+    shield:svg('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>'),
+    stamp:svg('<path d="M5 21h14"/><path d="M6 17h12v-3a2 2 0 0 0-2-2h-2l1-6a3 3 0 0 0-6 0l1 6H8a2 2 0 0 0-2 2z"/>'),
+    wrench:svg('<path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L4 17l3 3 5.2-5.2a4 4 0 0 0 5.3-5.3l-2.5 2.5-2.5-.5-.5-2.5z"/>',26),
+    clip:svg('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 12h6"/><path d="M9 16h4"/>',26),
+    sign:'<svg width="180" height="48" viewBox="0 0 180 48" fill="none" stroke="#1B2229" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 34c12-20 18-24 22-14s4 16 12 2 10-18 14-6 6 14 14 0 12-10 16-2 8 8 18-4 16-8 24 0 20 6 34-2"/></svg>'
+  };
+  var PROJ={anelo:'Obra Añelo, Frente Norte',sanjuan:'Obra San Juan, Planta Granito',rosario:'Obra Rosario, Puerto'};
+  var APPS={partes:{name:'Partes de obra',desc:'Partes diarios, combustible y check-lists',color:'#B8430F',icon:I.clip},
+            mant:{name:'Mantenimiento',desc:'Órdenes de trabajo de equipos',color:'#1E4FA8',icon:I.wrench},
+            seg:{name:'Seguridad',desc:'Inspecciones y no conformidades',color:'#1F5A2E',icon:I.clip}};
+  var ROLES=['Administrador de aplicación','Supervisor','Operador','Consulta','Sin acceso'];
+  var ACT={
+    partes:{'Administrador de aplicación':['parte.crear','parte.aprobar','combustible.crear','checklist.maquinaria','checklist.seguridad','roles.asignar'],
+      'Supervisor':['parte.crear','parte.aprobar','combustible.crear','checklist.maquinaria','checklist.seguridad'],
+      'Operador':['parte.crear','checklist.maquinaria'],'Consulta':['parte.ver'],'Sin acceso':[]},
+    other:{'Administrador de aplicación':['orden.crear','orden.cerrar','orden.ver','roles.asignar'],'Supervisor':['orden.crear','orden.cerrar','orden.ver'],
+      'Operador':['orden.crear','orden.ver'],'Consulta':['orden.ver'],'Sin acceso':[]}
+  };
+  function acts(app,role){return (ACT[app]||ACT.other)[role]||[];}
+  var ORDER=[['anelo','partes'],['sanjuan','partes'],['anelo','mant'],['anelo','seg'],['rosario','partes']];
+
+  // Estado del servidor (plataforma) y del dispositivo
+  var server={assign:{'anelo|partes':'Supervisor','sanjuan|partes':'Operador','anelo|mant':'Administrador de aplicación','anelo|seg':'Sin acceso','rosario|partes':'Sin acceso'},
+    audit:[{t:'22 sep 10:14',x:'Admin. interno designó a J. Pérez como Administrador de aplicación en Mantenimiento, Obra Añelo.'}]};
+  var NAMES={'EX-14':'Excavadora EX-14','MN-03':'Motoniveladora MN-03','CA-07':'Camión volcador CA-07'};
+  var CHECKS=[['niveles','Niveles de aceite y refrigerante'],['luces','Luces y alarma de retroceso'],['perdidas','Sin pérdidas visibles']];
+  var S={screen:'login',online:true,proj:null,perms:JSON.parse(JSON.stringify(server.assign)),permsPending:false,installed:{partes:true,mant:false,seg:false},
+    eq:'EX-14',horo:'',litros:'',checks:{niveles:false,luces:false,perdidas:false},fotos:0,firmado:false,lastSync:'hoy 07:31',seq:233,
+    readings:{'EX-14':4790,'MN-03':2311,'CA-07':9120},
+    partes:[
+      {proj:'anelo',id:'P-0232',uid:'7c1e-42b9',equipo:'Camión volcador CA-07',detalle:'9 h · 210 L',hora:'07:25',synced:true,fotos:1},
+      {proj:'anelo',id:'P-0231',uid:'b30a-19f4',equipo:'Motoniveladora MN-03',detalle:'8,5 h · 120 L',hora:'07:10',synced:true,fotos:2},
+      {proj:'sanjuan',id:'P-0198',uid:'e81d-0c33',equipo:'Excavadora EX-14',detalle:'7 h · 0 L',hora:'06:55',synced:true,fotos:0}
+    ]};
+  var toastTimer, app=document.getElementById('app');
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function fmt(n){return Number(n).toLocaleString('es-AR',{maximumFractionDigits:1});}
+  function now(){var d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+  function hex(){return Math.floor(Math.random()*65536).toString(16).padStart(4,'0');}
+  function role(p,a){return S.perms[p+'|'+a]||'Sin acceso';}
+  function can(x){return S.proj&&acts('partes',role(S.proj,'partes')).indexOf(x)>=0;}
+  function pend(){return S.partes.filter(function(p){return !p.synced;});}
+  function calc(){var last=S.readings[S.eq],h=parseFloat(String(S.horo).replace(',','.')),has=S.horo!==''&&!isNaN(h),warn=has&&h<last;return {last:last,h:h,has:has,warn:warn,ok:has&&!warn,canSave:has&&!warn&&S.firmado};}
+  function appsEnabled(){return Object.keys(APPS).filter(function(a){return Object.keys(PROJ).some(function(p){return role(p,a)!=='Sin acceso';});});}
+  function projsFor(a){return Object.keys(PROJ).filter(function(p){return role(p,a)!=='Sin acceso';});}
+
+  function sigPill(){var n=pend().length;
+    return S.online?'<div class="pill on">'+I.wifi+'<span>En línea, todo sincronizado</span></div>'
+      :'<div class="pill off">'+I.nowifi+'<span>Sin conexión, '+(n===1?'1 registro':n+' registros')+' en cola</span></div>';}
+  function sigBtn(){return '<button class="sig-btn" data-a="toggle">'+(S.online?'Simular sin señal':'Recuperar señal')+'</button>';}
+
+  function vLogin(){
+    return '<div class="login"><div><div class="mk">MILICIC</div><div class="tag2">Portal de aplicaciones</div></div>'+
+      '<div class="box2"><button class="ms" data-a="login"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="9" height="9" fill="#F25022"/><rect x="13" y="2" width="9" height="9" fill="#7FBA00"/><rect x="2" y="13" width="9" height="9" fill="#00A4EF"/><rect x="13" y="13" width="9" height="9" fill="#FFB900"/></svg>Iniciar sesión con cuenta Milicic</button>'+
+      '<small>Un único inicio de sesión para todas las aplicaciones del ecosistema.</small></div></div>';
+  }
+  function vPortal(){
+    var list=appsEnabled().map(function(a){var A=APPS[a],inst=S.installed[a],n=projsFor(a).length;
+      return '<div class="appcard"><div class="appicon" style="background:'+A.color+'">'+A.icon+'</div><div class="grow"><div class="t">'+A.name+'</div><div class="s">'+A.desc+'. Habilitada en '+n+(n===1?' obra':' obras')+'.</div></div>'+
+        (inst?'<button class="mini" data-a="openapp" data-v="'+a+'">Abrir</button>':'<button class="mini ghost" data-a="install" data-v="'+a+'">Instalar</button>')+'</div>';}).join('');
+    return '<div class="portal-head"><div class="sub2">Portal Milicic</div><div class="hi">Hola, Juan</div><div class="sub2">J. Pérez · jperez@milicic.com.ar</div></div>'+
+      '<div class="app-body" id="body"><h3 class="sec-title">Tus aplicaciones</h3>'+(list||'<div class="infonote">No tenés aplicaciones habilitadas por el momento.</div>')+
+      '<div class="infonote">Solo ves las aplicaciones en las que tenés un rol asignado en al menos una obra. Si cambian tus accesos, esta lista se actualiza sola.</div></div>';
+  }
+  function vProjects(){
+    var list=projsFor('partes').map(function(p){return '<button class="proj" data-a="proj" data-v="'+p+'"><div><div class="t">'+PROJ[p]+'</div><div class="s">Tocá para ingresar</div></div><span class="role">'+role(p,'partes')+'</span></button>';}).join('');
+    return '<div class="app-head"><div class="row"><div><div class="brand">Milicic · Partes de obra</div><div class="obra">Elegí la obra</div><div class="who">J. Pérez</div></div>'+sigBtn()+'</div>'+sigPill()+'<button class="linkbtn" data-a="go" data-v="portal">Volver al portal</button></div>'+
+      '<div class="app-body" id="body"><p class="hint2">Tus permisos dependen de la obra en la que trabajás.</p>'+(list||'<div class="infonote">No tenés obras asignadas en esta aplicación.</div>')+'</div>';
+  }
+  function head(){
+    return '<div class="app-head"><div class="row"><div><div class="brand">Milicic · Partes de obra</div><div class="obra">'+PROJ[S.proj]+'</div><div class="who">J. Pérez · Rol: '+role(S.proj,'partes')+'</div></div>'+sigBtn()+'</div>'+sigPill()+
+      '<button class="linkbtn" data-a="go" data-v="projects">Cambiar de obra</button></div>';
+  }
+  function vHome(){
+    var mine=S.partes.filter(function(p){return p.proj===S.proj;}), n=pend().length;
+    var tiles=[['parte.crear','form',I.doc.replace('22','20').replace('22','20'),'Parte diario',true],['combustible.crear','x',I.fuel,'Carga de combustible'],['checklist.maquinaria','x',I.list,'Check-list maquinaria'],['checklist.seguridad','x',I.shield,'Check-list seguridad'],['parte.aprobar','x',I.stamp,'Aprobar partes del turno']]
+      .filter(function(t){return can(t[0]);}).map(function(t){return '<button class="tile'+(t[4]?' main':'')+'" data-a="'+(t[1]==='form'?'go':'demo')+'" data-v="'+t[1]+'">'+t[2]+'<span>'+t[3]+'</span></button>';}).join('');
+    var items=mine.map(function(p){return '<div class="item"><div><div class="t">'+esc(p.equipo)+'</div><div class="s">'+p.id+', '+p.hora+', '+esc(p.detalle)+'</div></div>'+(p.synced?'<span class="tag ok">Sincronizado</span>':'<span class="tag q">En cola</span>')+'</div>';}).join('');
+    return '<div class="kpis"><div class="kpi"><b>'+mine.length+'</b><span>Partes hoy</span></div><div class="kpi"><b>3</b><span>Equipos en obra</span></div><div class="kpi"><b style="color:var(--accent)">'+n+'</b><span>En cola</span></div></div>'+
+      (tiles?'<div class="tiles">'+tiles+'</div>':'<div class="infonote">Tu rol en esta obra es de consulta: podés ver los partes, pero no cargar nuevos.</div>')+
+      '<h3 class="sec-title">Partes de hoy</h3>'+(items||'<div class="infonote">Todavía no hay partes cargados hoy en esta obra.</div>');
+  }
+  function vForm(){
+    var c=calc();
+    var eqs=Object.keys(NAMES).map(function(id){return '<button class="eq" data-a="eq" data-v="'+id+'" aria-pressed="'+(S.eq===id)+'"><span>'+NAMES[id]+'</span><small>Últ. lectura '+fmt(S.readings[id])+' h</small></button>';}).join('');
+    var chks=CHECKS.map(function(k){var on=S.checks[k[0]];return '<button class="chk" data-a="chk" data-v="'+k[0]+'" aria-pressed="'+on+'"><span class="box">'+(on?I.check:'')+'</span><span>'+k[1]+'</span></button>';}).join('');
+    var fotos='';for(var i=0;i<S.fotos;i++){fotos+='<div class="foto">Foto '+(i+1)+'</div>';}
+    return '<div class="form-head"><button class="back" data-a="go" data-v="home" aria-label="Volver">'+I.back+'</button><h3>Parte diario</h3></div>'+
+      '<div class="field"><span class="lbl" id="lbl-eq">Equipo</span><div role="group" aria-labelledby="lbl-eq" style="display:flex;flex-direction:column;gap:6px">'+eqs+'</div></div>'+
+      '<div class="two"><div class="field"><label for="horo">Horómetro final (h)</label><input class="inp" id="horo" inputmode="decimal" autocomplete="off" placeholder="Mayor a '+fmt(c.last)+'" value="'+esc(S.horo)+'"></div>'+
+      '<div class="field"><label for="litros">Combustible (L)</label><input class="inp" id="litros" inputmode="decimal" autocomplete="off" placeholder="0" value="'+esc(S.litros)+'"></div></div>'+
+      '<div id="feedback" aria-live="polite"></div>'+
+      '<div class="field"><span class="lbl">Check-list del equipo</span>'+chks+'</div>'+
+      '<div class="field"><span class="lbl">Fotos</span><div class="fotos">'+fotos+(S.fotos<4?'<button class="add" data-a="foto">'+I.cam+'Agregar</button>':'')+'</div></div>'+
+      '<div class="field"><span class="lbl">Firma</span>'+(S.firmado?'<div class="firma done" aria-label="Parte firmado">'+I.sign+'</div>':'<button class="firma" data-a="firmar">Tocar para firmar</button>')+'</div>'+
+      '<button class="primary" id="save" data-a="save">Guardar parte</button><p class="hint">Se guarda en el dispositivo al instante, con o sin señal.</p>';
+  }
+  function vQueue(){
+    var p=pend(),f=p.reduce(function(a,x){return a+(x.fotos||0);},0);
+    var list=p.length?p.map(function(q){return '<div class="card" style="gap:4px"><div style="font-weight:600">'+esc(q.equipo)+'</div><div class="uid">ID '+q.uid+'</div><div style="font-size:12px;color:var(--muted)">'+PROJ[q.proj]+', guardado '+q.hora+'</div></div>';}).join(''):'<div class="allgood">No hay registros pendientes. Todo lo cargado ya está en el servidor.</div>';
+    return '<h3 class="sec-title" style="font-size:24px;font-weight:700">Sincronización</h3>'+
+      '<div class="card"><div class="kv"><span>Registros en cola</span><b>'+p.length+'</b></div><div class="kv"><span>Fotos en cola de adjuntos</span><b>'+f+'</b></div><div class="kv"><span>Permisos</span><b>'+(S.permsPending?'Actualización pendiente':'Al día')+'</b></div><div class="kv"><span>Última sincronización</span><b>'+S.lastSync+'</b></div></div>'+list+
+      '<div class="explain">Cada registro lleva un identificador único generado en este dispositivo. Si el envío se corta y se reintenta, el servidor lo reconoce y no lo duplica. Los permisos de cada obra también se guardan en el teléfono, para que la app funcione sin señal.</div>';
+  }
+  function nav(){function b(v,ic,l){return '<button data-a="go" data-v="'+v+'"'+(S.screen===v?' aria-current="page"':'')+'>'+ic+l+'</button>';}
+    return '<nav class="nav" aria-label="Secciones">'+b('home',I.home,'Inicio')+(can('parte.crear')?b('form',I.doc,'Nuevo parte'):'')+b('queue',I.sync,'Sincronización')+'</nav>';}
+
+  function render(){
+    var html, inApp=['home','form','queue'].indexOf(S.screen)>=0;
+    if(S.screen==='login') html=vLogin();
+    else if(S.screen==='portal') html=vPortal();
+    else if(S.screen==='projects') html=vProjects();
+    else html=head()+'<div class="app-body" id="body">'+(S.screen==='form'?vForm():S.screen==='queue'?vQueue():vHome())+'</div>'+nav();
+    app.innerHTML=html+'<div class="toast" id="toast" role="status" aria-live="polite"></div>';
+    if(S.screen==='form') feedback();
+  }
+  function feedback(){var c=calc(),f=document.getElementById('feedback'),b=document.getElementById('save');if(!f)return;
+    f.innerHTML=c.warn?'<div class="warn">La lectura es menor a la última registrada ('+fmt(c.last)+' h). El horómetro solo puede avanzar: revisá el valor.</div>':c.ok?'<div class="good">Horas trabajadas en el turno: '+fmt(c.h-c.last)+' h</div>':'';
+    b.disabled=!c.canSave;}
+  function toast(m){var t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){var x=document.getElementById('toast');if(x)x.classList.remove('show');},4000);}
+
+  function applyPerms(){
+    S.perms=JSON.parse(JSON.stringify(server.assign));S.permsPending=false;
+    var msg='Tus permisos se actualizaron.';
+    if(S.proj&&['home','form','queue'].indexOf(S.screen)>=0){
+      if(role(S.proj,'partes')==='Sin acceso'){S.screen='projects';S.proj=null;msg='Ya no tenés acceso a esa obra.';}
+      else if(S.screen==='form'&&!can('parte.crear')){S.screen='home';}
+    }
+    if(S.screen==='projects'&&!projsFor('partes').length){S.screen='portal';}
+    return msg;
+  }
+  function serverChanged(){
+    if(S.online){var m=applyPerms();render();toast(m);} else {S.permsPending=true;render();}
+  }
+
+  app.addEventListener('input',function(e){if(e.target.id==='horo'){S.horo=e.target.value;feedback();}if(e.target.id==='litros'){S.litros=e.target.value;}});
+  app.addEventListener('click',function(e){
+    var b=e.target.closest('[data-a]');if(!b)return;
+    var a=b.getAttribute('data-a'),v=b.getAttribute('data-v'),msg=null;
+    if(a==='login'){S.screen='portal';msg='Sesión iniciada con la cuenta corporativa.';}
+    else if(a==='openapp'){if(v==='partes'){S.screen='projects';}else{msg='En este prototipo solo está desarrollada la app Partes de obra.';}}
+    else if(a==='install'){S.installed[v]=true;msg='Te llevamos a la tienda para descargarla. Al volver, se abre sin pedir de nuevo el usuario.';}
+    else if(a==='proj'){S.proj=v;S.screen='home';}
+    else if(a==='go'){S.screen=v;if(v==='portal'||v==='projects')S.proj=v==='projects'?null:S.proj;}
+    else if(a==='demo'){msg='En este prototipo solo está habilitado el parte diario.';}
+    else if(a==='eq'){S.eq=v;S.horo='';}
+    else if(a==='chk'){S.checks[v]=!S.checks[v];}
+    else if(a==='foto'){S.fotos=Math.min(S.fotos+1,4);}
+    else if(a==='firmar'){S.firmado=true;}
+    else if(a==='toggle'){
+      if(S.online){S.online=false;msg='Sin señal. Podés seguir cargando partes con normalidad.';}
+      else{var n=pend().length;S.online=true;S.lastSync='hoy '+now();S.partes.forEach(function(p){p.synced=true;});
+        var parts=[];if(n>0)parts.push(n+(n===1?' registro sincronizado':' registros sincronizados')+', sin duplicados');
+        if(S.permsPending){applyPerms();parts.push('permisos actualizados');W.flash={ok:true,t:'El teléfono de J. Pérez sincronizó y ya aplica los permisos nuevos.'};}
+        msg=parts.length?'Señal recuperada: '+parts.join(' y ')+'.':'Señal recuperada. No había nada pendiente.';
+        renderWeb();}
+    }
+    else if(a==='save'){var c=calc();if(!c.canSave)return;var l=parseFloat(String(S.litros).replace(',','.'))||0;
+      S.partes.unshift({proj:S.proj,id:'P-0'+S.seq,uid:hex()+'-'+hex(),equipo:NAMES[S.eq],detalle:fmt(c.h-c.last)+' h · '+fmt(l)+' L',hora:now(),synced:S.online,fotos:S.fotos});
+      S.readings[S.eq]=c.h;S.seq++;if(S.online)S.lastSync='hoy '+now();
+      S.horo='';S.litros='';S.fotos=0;S.firmado=false;S.checks={niveles:false,luces:false,perdidas:false};S.screen='home';
+      msg=S.online?'Parte guardado y sincronizado.':'Parte guardado en el dispositivo. Se enviará solo al recuperar señal.';}
+    var sc=(document.getElementById('body')||{}).scrollTop||0;
+    render();
+    if(['eq','chk','foto','firmar','toggle','demo'].indexOf(a)>=0){var bd=document.getElementById('body');if(bd)bd.scrollTop=sc;}
+    if(msg)toast(msg);
+  });
+
+  // ---------- Plataforma web ----------
+  var web=document.getElementById('web'),W={tab:'asig',decision:null,qp:'anelo',qa:'partes',flash:null};
+  var RES={A:['Se confirmó 4.812 h como lectura válida. La lectura B queda archivada con su justificación.','confirmó lectura A (4.812 h) del horómetro de EX-14'],
+    B:['Se corrigió el horómetro a 4.795 h. La lectura A queda archivada con su justificación.','corrigió a lectura B (4.795 h) el horómetro de EX-14'],
+    F:['Se envió un pedido de verificación al supervisor de la obra. El equipo queda marcado hasta la nueva lectura.','solicitó verificación física del horómetro de EX-14']};
+
+  function apiView(){
+    var r=server.assign[W.qp+'|'+W.qa]||'Sin acceso', ac=acts(W.qa,r);
+    return '<pre class="api" aria-label="Respuesta de la consulta de permisos"><span class="k">GET</span> /autorizacion?usuario=jperez&amp;proyecto='+W.qp+'&amp;app='+W.qa+'\n\n{\n  <span class="k">"usuario"</span>: "jperez",\n  <span class="k">"proyecto"</span>: "'+W.qp+'",\n  <span class="k">"aplicacion"</span>: "'+W.qa+'",\n  <span class="k">"rol"</span>: "'+r+'",\n  <span class="k">"acciones"</span>: ['+(ac.length?'\n    "'+ac.join('",\n    "')+'"\n  ':'')+']\n}</pre>';
+  }
+  function vAsig(){
+    var rows=ORDER.map(function(k){var key=k[0]+'|'+k[1],r=server.assign[key];
+      var opts=ROLES.map(function(x){return '<option'+(x===r?' selected':'')+'>'+x+'</option>';}).join('');
+      return '<tr><td>'+PROJ[k[0]]+'</td><td>'+APPS[k[1]].name+'</td><td><label class="sr" style="position:absolute;left:-9999px" for="r-'+k[0]+'-'+k[1]+'">Rol en '+PROJ[k[0]]+', '+APPS[k[1]].name+'</label><select class="sel" id="r-'+k[0]+'-'+k[1]+'" data-key="'+key+'">'+opts+'</select></td></tr>';}).join('');
+    var pOpts=Object.keys(PROJ).map(function(p){return '<option value="'+p+'"'+(p===W.qp?' selected':'')+'>'+PROJ[p]+'</option>';}).join('');
+    var aOpts=Object.keys(APPS).map(function(a){return '<option value="'+a+'"'+(a===W.qa?' selected':'')+'>'+APPS[a].name+'</option>';}).join('');
+    var log=server.audit.slice(0,4).map(function(l){return '<div>'+l.t+' · '+esc(l.x)+'</div>';}).join('');
+    var fl=W.flash?'<div class="flash '+(W.flash.ok?'ok':'wait')+'" role="status">'+W.flash.t+'</div>':'';
+    return '<div class="person"><div class="avatar">JP</div><div><div style="font-weight:600;font-size:18px">Juan Pérez</div><div class="hint2">Persona sincronizada desde Sityo · Legajo 10482 · Usuario activo</div></div></div>'+
+      '<div class="twocol"><div class="detail" style="gap:14px"><h4 style="font-size:22px">Asignaciones por obra y aplicación</h4>'+
+      '<p class="hint2">El rol se define para cada combinación de obra y aplicación. Probá cambiar uno y mirá la app en el teléfono.</p>'+
+      '<table class="atable"><thead><tr><th>Obra</th><th>Aplicación</th><th>Rol</th></tr></thead><tbody>'+rows+'</tbody></table>'+fl+'</div>'+
+      '<div style="display:flex;flex-direction:column;gap:16px"><div class="detail" style="gap:12px"><h4 style="font-size:22px">Consulta de permisos</h4>'+
+      '<p class="hint2">Así le pregunta cada aplicación a la plataforma qué puede hacer un usuario. Cualquier proveedor futuro se integra de la misma forma.</p>'+
+      '<div class="row2"><label style="position:absolute;left:-9999px" for="qp">Obra</label><select class="sel" id="qp">'+pOpts+'</select><label style="position:absolute;left:-9999px" for="qa">Aplicación</label><select class="sel" id="qa">'+aOpts+'</select></div>'+apiView()+'</div>'+
+      '<div class="detail" style="gap:10px"><h4 style="font-size:22px">Auditoría</h4><div class="log">'+log+'</div></div></div></div>';
+  }
+  function vRev(){
+    var open=W.decision===null;
+    return '<div class="cols"><div class="list"><h4>Pendientes de decisión</h4>'+
+      '<div class="case sel"><div class="t">Horómetro, Excavadora EX-14</div><div class="s">Obra Añelo, Frente Norte, 23 sep</div>'+(open?'<span class="tag q" style="align-self:flex-start">Lectura menor a la registrada</span>':'<span class="tag ok" style="align-self:flex-start">Resuelto</span>')+'</div>'+
+      '<h4 class="mt">Resueltos automáticamente hoy</h4>'+
+      '<div class="case"><div class="t">Combustible, Excavadora EX-14</div><div class="s">Dos supervisores cargaron combustible sobre el mismo equipo sin conexión. Se registraron como dos cargas independientes (180 L y 95 L). Sin conflicto.</div></div>'+
+      '<div class="case"><div class="t">Reintento de envío, P-0229</div><div class="s">El dispositivo reenvió un parte tras un corte de señal. El servidor reconoció el identificador y descartó el duplicado.</div></div></div>'+
+      '<div class="detail"><div><h4>Horómetro, Excavadora EX-14</h4><p class="sub">Dos supervisores cargaron lecturas sobre el mismo equipo mientras estaban sin conexión.</p></div>'+
+      '<div class="rule">Regla aplicada: <strong>el horómetro solo puede avanzar.</strong> La lectura de M. Gómez llegó después y es menor a la ya registrada, por eso no se descartó ni se sobrescribió: se envió a revisión.</div>'+
+      '<div class="versions"><div class="ver"><div class="h">Lectura A, registrada</div><div class="v">4.812 h</div><ul><li>Cargó: J. Pérez, supervisor turno mañana</li><li>Cargada en obra: 07:42, sin conexión</li><li>Llegó al servidor: 16:30</li><li>Adjuntos: 1 foto del tablero</li></ul></div>'+
+      '<div class="ver rev"><div class="h">Lectura B, en revisión</div><div class="v">4.795 h</div><ul><li>Cargó: M. Gómez, supervisor de equipos</li><li>Cargada en obra: 08:05, sin conexión</li><li>Llegó al servidor: 18:10</li><li>Adjuntos: 1 foto del tablero</li></ul></div></div>'+
+      (open?'<div class="actions"><button class="btn-dark" data-w="A">Confirmar lectura A</button><button class="btn-line" data-w="B">Corregir con lectura B</button><button class="btn-soft" data-w="F">Pedir verificación en obra</button></div>'
+        :'<div class="result" role="status">'+RES[W.decision][0]+'</div><div><button class="btn-soft" data-w="reset">Volver a ver el caso</button></div>')+'</div></div>';
+  }
+  function renderWeb(){
+    var pendingRev=W.decision===null?1:0;
+    web.innerHTML='<aside class="side"><div class="b"><small>Milicic</small><span>Plataforma central</span></div><nav aria-label="Plataforma web">'+
+      '<button data-noop>Obras</button><button data-tab="asig" class="'+(W.tab==='asig'?'cur':'')+'"'+(W.tab==='asig'?' aria-current="page"':'')+'>Usuarios y asignaciones</button><button data-noop>Aplicaciones</button><button data-noop>Roles y permisos</button>'+
+      '<button data-tab="rev" class="'+(W.tab==='rev'?'cur':'')+'"'+(W.tab==='rev'?' aria-current="page"':'')+'>Bandeja de revisión<span class="badge">'+pendingRev+'</span></button><button data-noop>Auditoría</button></nav></aside>'+
+      '<div class="main"><div><h3>'+(W.tab==='asig'?'Usuarios y asignaciones':'Bandeja de revisión')+'</h3><p class="sub">'+(W.tab==='asig'?'Personas incorporadas desde Sityo y sus roles por obra y aplicación.':'Registros que las reglas automáticas no pudieron resolver y requieren una decisión.')+'</p></div>'+
+      (W.tab==='asig'?vAsig():vRev())+'</div>';
+  }
+  web.addEventListener('click',function(e){
+    if(e.target.closest('[data-noop]')){toast2();return;}
+    var t=e.target.closest('[data-tab]');if(t){W.tab=t.getAttribute('data-tab');renderWeb();return;}
+    var b=e.target.closest('[data-w]');if(!b)return;var v=b.getAttribute('data-w');
+    if(v==='reset')W.decision=null;else{W.decision=v;server.audit.unshift({t:'23 sep '+now(),x:'Responsable de obra '+RES[v][1]+'.'});}
+    renderWeb();
+  });
+  function toast2(){}
+  web.addEventListener('change',function(e){
+    var el=e.target;
+    if(el.id==='qp'){W.qp=el.value;renderWeb();return;}
+    if(el.id==='qa'){W.qa=el.value;renderWeb();return;}
+    var key=el.getAttribute('data-key');if(!key)return;
+    var prev=server.assign[key],k=key.split('|');server.assign[key]=el.value;
+    server.audit.unshift({t:'23 sep '+now(),x:'Admin. de aplicación cambió el rol de J. Pérez en '+APPS[k[1]].name+', '+PROJ[k[0]]+': '+prev+' a '+el.value+'.'});
+    W.qp=k[0];W.qa=k[1];
+    W.flash=S.online?{ok:true,t:'Cambio aplicado. El teléfono de J. Pérez ya tiene los permisos nuevos.'}:{ok:false,t:'Cambio guardado. El teléfono está sin señal: se aplicará en su próxima sincronización.'};
+    serverChanged();renderWeb();
+    var sel=document.querySelector('[data-key="'+key+'"]');if(sel)sel.focus();
+  });
+
+  render();renderWeb();
+})();
+</script>
+</body>
+</html>
