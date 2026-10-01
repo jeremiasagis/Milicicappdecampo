@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prototipo · Plataforma central y Seguridad e Higiene · Milicic S.A.</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B2229; --ground:#F3F1EC; --card:#FFFFFF; --line:#DDD8CE; --muted:#5B6168; --soft:#3A4148;
+  --accent:#B8430F; --accent-dark:#8A2E07; --accent-bg:#FBE3D3;
+  --ok-bg:#DCEBDF; --ok:#1F5A2E; --info-bg:#DCE6F7; --info:#173F86;
+  --brand:#FF6B00; --brand-ink:#240805;
+  --display:'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:#E7E3DA;color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+button,input{font-family:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* Página contenedora */
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;max-width:1400px;margin:0 auto;padding:24px 32px}
+.wordmark{font-family:var(--display);font-weight:700;font-size:30px;color:var(--brand);letter-spacing:.01em;line-height:1}
+.for{font-size:14px;color:var(--soft)}
+.for strong{color:var(--brand-ink)}
+.intro{max-width:1400px;margin:0 auto;padding:8px 32px 32px;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.intro h1{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(36px,5vw,60px);line-height:1;color:var(--brand-ink);max-width:18ch}
+.intro p{margin:0;max-width:62ch;color:var(--soft);font-size:17px}
+
+.stage{max-width:1400px;margin:0 auto;padding:0 32px 48px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:48px;align-items:start}
+.guide{display:flex;flex-direction:column;gap:20px;padding-top:12px;max-width:520px}
+.guide h2{margin:0;font-family:var(--display);font-size:28px;color:var(--brand-ink)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:start}
+.steps li::before{content:counter(s);width:40px;height:40px;border-radius:50%;background:var(--brand-ink);color:#fff;font-family:var(--display);font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center}
+.steps strong{display:block;font-size:16px}
+.steps span{color:var(--soft);font-size:15px}
+.note{font-size:14px;color:var(--muted);border-top:1px solid #CFC9BD;padding-top:16px}
+
+.web-wrap{max-width:1400px;margin:0 auto;padding:0 32px 56px;display:flex;flex-direction:column;gap:16px}
+.web-wrap h2{margin:0;font-family:var(--display);font-size:28px;color:var(--brand-ink)}
+.web-wrap > p{margin:0;color:var(--soft);max-width:70ch}
+.scroll-x{overflow-x:auto;border-radius:18px;box-shadow:0 1px 0 #CFC9BD}
+
+footer{background:var(--brand);color:#fff}
+footer .in{max-width:1400px;margin:0 auto;padding:28px 32px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer .claim{font-family:var(--display);font-weight:700;font-size:26px;color:var(--brand-ink)}
+footer .meta{font-size:14px;color:var(--brand-ink)}
+
+@media (max-width: 960px){
+  .stage{grid-template-columns:minmax(0,1fr);justify-items:center;gap:32px}
+  .guide{order:-1;max-width:none;width:100%}
+  .top,.intro,.stage,.web-wrap{padding-left:20px;padding-right:20px}
+}
+
+/* Teléfono */
+.phone{width:390px;max-width:100%;height:844px;border-radius:40px;background:#111;padding:10px;box-shadow:0 30px 60px -30px rgba(36,8,5,.45)}
+.screen{position:relative;width:100%;height:100%;border-radius:31px;overflow:hidden;background:var(--ground);display:flex;flex-direction:column}
+@media (max-width: 430px){.phone{height:760px;border-radius:32px;padding:8px}.screen{border-radius:25px}}
+
+.app-head{background:var(--ink);color:var(--ground);padding:20px 18px 16px;display:flex;flex-direction:column;gap:12px}
+.app-head .row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.app-head .brand{font-size:12px;color:#C9C4B8}
+.app-head .obra{font-family:var(--display);font-weight:700;font-size:25px;line-height:1.1}
+.app-head .who{font-size:13px;color:#C9C4B8}
+.sig-btn{min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid #4A545E;background:#26303A;color:var(--ground);font-size:12px;font-weight:600;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;align-self:flex-start}
+.pill.on{background:var(--info-bg);color:var(--info)}
+.pill.off{background:var(--accent-bg);color:var(--accent-dark)}
+
+.app-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:16px}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.kpi b{font-family:var(--display);font-size:28px;line-height:1.1}
+.kpi span{font-size:12px;color:var(--muted)}
+.primary{min-height:56px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+.primary:disabled{background:#9A9C9E;cursor:not-allowed}
+.sec-title{font-family:var(--display);font-weight:600;font-size:19px;margin:0}
+.item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.item .t{font-weight:600;font-size:15px}
+.item .s{font-size:13px;color:var(--muted)}
+.tag{font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px;white-space:nowrap}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.q{background:var(--accent-bg);color:var(--accent-dark)}
+.back{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.form-head{display:flex;align-items:center;gap:10px}
+.form-head h3{margin:0;font-family:var(--display);font-size:24px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field > label,.field > .lbl{font-size:13px;font-weight:600;color:var(--soft)}
+.eq{min-height:48px;text-align:left;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:15px;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%}
+.eq small{font-size:12px;color:var(--muted)}
+.eq[aria-pressed="true"]{border:2px solid var(--accent);background:#FFF4EC;font-weight:600}
+.eq[aria-pressed="true"] small{color:var(--accent-dark)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.inp{min-height:48px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid #BDB7AB;background:var(--card);font-size:17px;color:var(--ink)}
+.warn{padding:10px 12px;border-radius:10px;background:var(--accent-bg);color:var(--accent-dark);font-size:13px;line-height:1.4}
+.good{font-size:13px;color:var(--ok)}
+.chk{min-height:48px;display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:15px;color:var(--ink);text-align:left;width:100%}
+.box{width:24px;height:24px;flex-shrink:0;border-radius:6px;border:2px solid #8A8F95;display:flex;align-items:center;justify-content:center;color:#fff}
+.chk[aria-pressed="true"] .box{background:var(--ok);border-color:var(--ok)}
+.fotos{display:flex;gap:8px;flex-wrap:wrap}
+.foto{width:72px;height:72px;border-radius:10px;background:repeating-linear-gradient(45deg,#E4DFD4,#E4DFD4 6px,#EEEAE1 6px,#EEEAE1 12px);border:1px solid var(--line);display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-size:11px;color:var(--soft)}
+.add{width:72px;height:72px;border-radius:10px;border:1px dashed #8A8F95;background:var(--card);color:var(--soft);font-size:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.firma{min-height:72px;border-radius:10px;border:1px dashed #8A8F95;background:var(--card);color:var(--soft);font-size:15px;width:100%;display:flex;align-items:center;justify-content:center}
+.firma.done{border-style:solid;border-color:var(--line);cursor:default}
+.hint{font-size:12px;color:var(--muted);text-align:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.kv{display:flex;justify-content:space-between;font-size:14px}
+.kv span{color:var(--muted)}
+.kv b{font-weight:600}
+.uid{font-size:12px;color:var(--muted);font-family:ui-monospace,'SF Mono',Consolas,monospace}
+.explain{padding:12px 14px;border-radius:12px;background:#E9E5DC;font-size:13px;line-height:1.5;color:var(--soft)}
+.allgood{padding:14px;border-radius:12px;background:var(--ok-bg);color:var(--ok);font-size:14px}
+.toast{position:absolute;left:14px;right:14px;bottom:88px;padding:12px 14px;border-radius:12px;background:var(--ink);color:var(--ground);font-size:14px;line-height:1.4;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);background:var(--card);padding:6px 8px 12px}
+.nav button{min-height:56px;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+.nav button[aria-current="page"]{color:var(--accent)}
+
+/* Panel web */
+.web{width:1280px;min-height:780px;display:flex;background:var(--ground)}
+.side{width:240px;flex-shrink:0;background:var(--ink);color:var(--ground);padding:28px 16px;display:flex;flex-direction:column;gap:28px}
+.side .b{padding:0 8px}
+.side .b small{display:block;font-size:12px;color:#C9C4B8}
+.side .b span{font-family:var(--display);font-weight:700;font-size:24px}
+.side nav{display:flex;flex-direction:column;gap:4px}
+.side nav a{padding:10px 12px;border-radius:8px;color:#C9C4B8;text-decoration:none;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.side nav a.cur{background:#2E3842;color:#fff;font-weight:600}
+.badge{background:var(--accent);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px}
+.main{flex:1;padding:32px 40px;display:flex;flex-direction:column;gap:24px}
+.main h3{margin:0;font-family:var(--display);font-size:34px;line-height:1.1}
+.main .sub{margin:4px 0 0;font-size:14px;color:var(--muted)}
+.cols{display:flex;gap:24px;align-items:flex-start}
+.list{width:320px;flex-shrink:0;display:flex;flex-direction:column;gap:10px}
+.list h4{margin:0;font-size:14px;font-weight:600;color:var(--muted)}
+.list h4.mt{margin-top:12px}
+.case{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.case.sel{border:2px solid var(--accent)}
+.case .t{font-weight:600;font-size:15px}
+.case .s{font-size:13px;color:var(--muted);line-height:1.45}
+.detail{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:20px}
+.detail h4{margin:0;font-family:var(--display);font-size:28px}
+.rule{padding:12px 16px;border-radius:10px;background:#E9E5DC;font-size:14px;line-height:1.5;color:var(--soft)}
+.versions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ver{border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.ver.rev{border-color:var(--accent);background:#FFF8F3}
+.ver .h{font-size:13px;font-weight:600;color:var(--muted)}
+.ver.rev .h{color:var(--accent-dark)}
+.ver .v{font-family:var(--display);font-weight:700;font-size:44px;line-height:1}
+.ver ul{margin:0;padding:0;list-style:none;font-size:13px;color:var(--soft);display:flex;flex-direction:column;gap:3px}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-dark{min-height:48px;padding:0 20px;border:none;border-radius:10px;background:var(--ink);color:#fff;font-size:15px;font-weight:600}
+.btn-line{min-height:48px;padding:0 20px;border:1px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink);font-size:15px;font-weight:600}
+.btn-soft{min-height:48px;padding:0 20px;border:1px solid #BDB7AB;border-radius:10px;background:#fff;color:var(--soft);font-size:15px}
+.result{padding:14px 16px;border-radius:10px;background:var(--ok-bg);color:var(--ok);font-size:14px;font-weight:600}
+.audit{padding:12px 16px;border-radius:10px;border:1px solid var(--line);font-size:13px;color:var(--soft);line-height:1.6}
+/* Agregados v2 */
+.login{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:56px 28px 36px;background:var(--ink);color:var(--ground)}
+.login .mk{font-family:var(--display);font-weight:700;font-size:44px;letter-spacing:.06em;line-height:1}
+.login .tag2{font-size:15px;color:#C9C4B8;margin-top:8px}
+.login .box2{display:flex;flex-direction:column;gap:14px}
+.login .ms{min-height:56px;border:none;border-radius:12px;background:#fff;color:var(--ink);font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px}
+.login small{font-size:12px;color:#A9A49A;text-align:center;line-height:1.4}
+.portal-head{background:var(--ink);color:var(--ground);padding:22px 18px 18px;display:flex;flex-direction:column;gap:4px}
+.portal-head .hi{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1}
+.portal-head .sub2{font-size:13px;color:#C9C4B8}
+.appcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;align-items:center;gap:14px}
+.appicon{width:52px;height:52px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff}
+.appcard .t{font-weight:600;font-size:16px}
+.appcard .s{font-size:13px;color:var(--muted)}
+.appcard .grow{flex:1;min-width:0}
+.mini{min-height:40px;padding:0 14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600}
+.mini.ghost{background:#fff;border:1px solid var(--ink);color:var(--ink)}
+.proj{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;color:var(--ink);min-height:64px}
+.proj .t{font-weight:600;font-size:15px}
+.proj .s{font-size:13px;color:var(--muted)}
+.role{font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px;background:#E9E5DC;color:var(--soft);white-space:nowrap}
+.linkbtn{background:none;border:none;color:#C9C4B8;font-size:13px;padding:6px 0;text-decoration:underline;text-underline-offset:3px;align-self:flex-start;min-height:32px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tile{min-height:76px;border-radius:12px;border:1px solid var(--line);background:var(--card);padding:12px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:6px;text-align:left;color:var(--ink);font-size:14px;font-weight:600}
+.tile svg{color:var(--accent)}
+.tile.main{background:var(--accent);border-color:var(--accent);color:#fff}
+.tile.main svg{color:#fff}
+.infonote{padding:12px 14px;border-radius:12px;background:#E9E5DC;font-size:13px;color:var(--soft);line-height:1.45}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tabs button{min-height:44px;padding:0 16px;border:none;background:none;font-size:15px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.side nav button{padding:10px 12px;border-radius:8px;color:#C9C4B8;font-size:14px;display:flex;justify-content:space-between;align-items:center;background:none;border:none;text-align:left;width:100%}
+.side nav button.cur{background:#2E3842;color:#fff;font-weight:600}
+.person{display:flex;align-items:center;gap:14px}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
+.atable{width:100%;border-collapse:collapse;font-size:14px}
+.atable th{text-align:left;font-size:13px;color:var(--muted);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line)}
+.atable td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.sel{min-height:40px;padding:0 10px;border-radius:8px;border:1px solid #BDB7AB;background:#fff;font-size:14px;color:var(--ink);font-family:inherit}
+.twocol{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.api{background:var(--ink);color:#E8E4DB;border-radius:12px;padding:16px;font-family:ui-monospace,'SF Mono',Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre;overflow-x:auto;margin:0}
+.api .k{color:#F4B287}
+.row2{display:flex;gap:8px;flex-wrap:wrap}
+.log{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--soft)}
+.log div{padding:8px 10px;border-radius:8px;background:#F7F5F0;border:1px solid var(--line)}
+.flash{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600}
+.flash.ok{background:var(--ok-bg);color:var(--ok)}
+.flash.wait{background:var(--accent-bg);color:var(--accent-dark)}
+.hint2{font-size:13px;color:var(--muted);margin:0}
+/* v3 Seguridad e Higiene */
+.cal-day{font-family:var(--display);font-weight:600;font-size:19px;margin:0}
+.sched{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;color:var(--ink);min-height:64px}
+.sched .t{font-weight:600;font-size:15px}
+.sched .s{font-size:12px;color:var(--muted)}
+.st{font-size:11px;font-weight:600;padding:4px 8px;border-radius:6px;white-space:nowrap}
+.st.pend{background:#E9E5DC;color:var(--soft)}
+.st.bor{background:#FFF1C9;color:#6B4E00}
+.st.q{background:var(--accent-bg);color:var(--accent-dark)}
+.st.ok{background:var(--ok-bg);color:var(--ok)}
+.st.obs{background:#E3DDF5;color:#46348A}
+.irow{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.irow .q{font-size:15px;font-weight:600}
+.conds{display:flex;gap:6px;flex-wrap:wrap}
+.cond{min-width:48px;min-height:44px;padding:0 10px;border-radius:10px;border:1px solid #BDB7AB;background:#fff;font-size:14px;font-weight:600;color:var(--ink)}
+.cond[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.cond.bad[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+.ta{width:100%;min-height:64px;padding:10px 12px;border-radius:10px;border:1px solid #BDB7AB;font-size:15px;font-family:inherit;color:var(--ink);resize:vertical}
+.ta.req{border-color:var(--accent);background:#FFF8F3}
+.req-note{font-size:12px;color:var(--accent-dark)}
+.photo-btn{align-self:flex-start;min-height:40px;padding:0 12px;border-radius:10px;border:1px dashed #8A8F95;background:#fff;color:var(--soft);font-size:13px;display:flex;align-items:center;gap:6px}
+.vtag{font-size:12px;color:var(--muted)}
+.legend{font-size:12px;color:var(--muted);line-height:1.5}
+.modal{position:absolute;inset:0;background:rgba(27,34,41,.55);display:flex;align-items:flex-end}
+.sheet{background:var(--ground);border-radius:20px 20px 0 0;padding:22px 18px 26px;width:100%;display:flex;flex-direction:column;gap:12px}
+.sheet h4{margin:0;font-family:var(--display);font-size:24px}
+.secondary{min-height:52px;border:1px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font-size:16px;font-weight:600;width:100%}
+.missing{font-size:12px;color:var(--accent-dark);text-align:center}
+.tplitem{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:4px;text-align:left;width:100%;color:var(--ink)}
+.tplitem[aria-pressed="true"]{border:2px solid var(--accent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;padding:4px 8px;border-radius:6px;background:#E9E5DC;color:var(--soft)}
+.ol{margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:4px}
+.ol li.new{color:var(--ok);font-weight:600}
+.form-inline{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.web .main{overflow:hidden}
+.prop{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:#FFE7D6;color:#8A2E07;white-space:nowrap}
+.side nav button .prop{background:#4A2A18;color:#FFC9A3}
+.hist{border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:center;font-size:13px;border:1px solid var(--line);background:#fff}
+.dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.dot.g{background:#2E8B47}.dot.r{background:#C0392B}.dot.y{background:#D4A017}.dot.n{background:#A9A49A}
+.qr{min-height:44px;border-radius:10px;border:1px solid var(--ink);background:#fff;color:var(--ink);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.selm{min-height:48px;width:100%;padding:0 12px;border-radius:10px;border:1px solid #BDB7AB;background:#fff;font-size:16px;font-family:inherit;color:var(--ink)}
+.kpig{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpib{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.kpib b{font-family:var(--display);font-size:34px;line-height:1}
+.kpib span{font-size:13px;color:var(--muted)}
+.bar{height:10px;border-radius:999px;background:#E9E5DC;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok)}
+.bld{display:grid;grid-template-columns:minmax(0,1.45fr) 300px;gap:20px;align-items:start}
+.bld .row3{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mini-in{min-height:38px;padding:0 10px;border-radius:8px;border:1px solid #BDB7AB;font-size:14px;font-family:inherit;color:var(--ink);background:#fff}
+.ibtn{min-width:36px;min-height:36px;border-radius:8px;border:1px solid #BDB7AB;background:#fff;color:var(--soft);font-size:14px}
+.prev{background:#1B2229;border-radius:28px;padding:8px}
+.prev .scr{background:var(--ground);border-radius:21px;padding:14px;display:flex;flex-direction:column;gap:10px;max-height:560px;overflow:hidden}
+.prev .t{font-family:var(--display);font-weight:700;font-size:20px}
+.ck{display:flex;align-items:center;gap:6px;font-size:13px}
+.ck input{width:18px;height:18px;accent-color:var(--accent)}
+.ansT td{font-size:13px}
+/* Login v2 */
+.login2{flex:1;display:flex;flex-direction:column;position:relative;background:radial-gradient(120% 70% at 50% 0%,#2C3843 0%,#1B2229 60%);color:var(--ground);overflow:hidden}
+.login2 .stripes{height:6px;background:repeating-linear-gradient(135deg,#B8430F 0 12px,#1B2229 12px 24px);flex-shrink:0}
+.lg-top{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 0}
+.lg-net{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#C9C4B8}
+.lg-net .d{width:8px;height:8px;border-radius:50%;background:#4CAF6A}
+.lg-net.off .d{background:#E07A3F}
+.sig-mini{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid #4A545E;background:transparent;color:#C9C4B8;font-size:12px;font-weight:600}
+.lg-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 28px;gap:10px}
+.lg-badge{width:88px;height:88px;border-radius:26px;background:linear-gradient(160deg,#C9521A,#8A2E07);display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px -16px rgba(184,67,15,.7);margin-bottom:10px}
+.lg-brand{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.32em;color:#C9C4B8}
+.lg-title{font-family:var(--display);font-weight:700;font-size:38px;line-height:1.02;color:#fff}
+.lg-sub{margin:0;font-size:15px;color:#C9C4B8;max-width:26ch;line-height:1.45}
+.lg-card{margin:0 16px 14px;background:var(--ground);color:var(--ink);border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.ms2{min-height:56px;border:none;border-radius:14px;background:var(--accent);color:#fff;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;white-space:nowrap}
+.ms2:hover{background:#A33B0D}
+.lg-note{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--soft);line-height:1.4}
+.lg-note svg{flex-shrink:0;margin-top:1px}
+.lg-note.ok svg{color:var(--ok)}
+.lg-note.warn svg{color:var(--accent-dark)}
+.lg-foot{display:flex;justify-content:center;align-items:center;gap:6px;font-size:11px;color:#8F98A1;padding:0 0 16px}
+.ms2{font-size:15px;gap:8px;padding:0 12px}
+.toast.top{top:64px;bottom:auto}
+.ms2 svg{flex-shrink:0}
+/* Branding Milicic para la app y la plataforma */
+#app, #web{--ink:#151515;--accent:#FAA419;--accent-dark:#8A5800;--accent-bg:#FDEFD2;--ground:#F4F2EE}
+#app .app-head,#web .side{background:#151515}
+#app .primary,#app .ms2,#app .mini,#app .tile.main,#web .badge{color:#151515}
+#app .primary:disabled{color:#fff}
+#app .ms2:hover{background:#E8930C}
+#app .nav button[aria-current="page"]{color:var(--accent-dark)}
+#app .tile svg{color:var(--accent-dark)}
+#app .tile.main svg{color:#151515}
+#app .eq[aria-pressed="true"]{background:#FFF6E3}
+#app .cond.bad[aria-pressed="true"]{color:#151515}
+#app .sig-btn{border-color:#3A3A3A;background:#222}
+#app .login2{background:radial-gradient(120% 70% at 50% 0%,#2B2B2B 0%,#151515 60%)}
+#app .login2 .stripes{background:repeating-linear-gradient(135deg,#FAA419 0 12px,#151515 12px 24px)}
+#app .lg-badge{background:linear-gradient(160deg,#FFB833,#E08A00);box-shadow:0 18px 40px -16px rgba(250,164,25,.55)}
+#app .lg-badge svg{stroke:#151515}
+#app .sig-mini{border-color:#3A3A3A}
+#app .lg-logo{height:30px;width:auto;display:block;margin-bottom:4px}
+#app .hd-logo{height:12px;width:auto;display:block;margin-bottom:6px}
+#web .sd-logo{height:16px;width:auto;display:block;margin-bottom:6px}
+#web .tplitem[aria-pressed="true"],#web .case.sel{border-color:#FAA419}
+#web .side nav button.cur{background:#2A2A2A}
+#web .btn-dark{background:#151515}
+#web .ver.rev{border-color:#FAA419;background:#FFF9EC}
+#web .ver.rev .h{color:var(--accent-dark)}
+#web .ck input{accent-color:#E08A00}
+#app .tagline{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#FAA419;font-weight:600}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wordmark" aria-label="Voolkia">Voolkia</div>
+  <div class="for">Prototipo para <strong>Milicic S.A.</strong></div>
+</header>
+
+<section class="intro">
+  <h1>Inspecciones de Seguridad e Higiene, con o sin señal</h1>
+  <p>Prototipo navegable del MVP propuesto: aplicación móvil para inspectores y plataforma web central. Los datos son de ejemplo. Lo marcado como <span class="prop">Propuesta Voolkia</span> son ideas que sumamos fuera del alcance pedido.</p>
+</section>
+
+<section class="stage">
+  <div class="phone" aria-label="App móvil de Seguridad e Higiene">
+    <div class="screen" id="app"></div>
+  </div>
+  <div class="guide">
+    <h2>Probalo en cinco pasos</h2>
+    <ol class="steps">
+      <li><div><strong>Ingresá y elegí una obra</strong><span>J. Pérez es Inspector en Añelo y Administrador de aplicación en San Juan. Lo que puede hacer depende de la obra.</span></div></li>
+      <li><div><strong>Cortá la señal y hacé una inspección</strong><span>Escaneá el QR del equipo, mirá su última inspección, marcá una F para ver la observación obligatoria, sacá fotos y confirmá con tu identidad.</span></div></li>
+      <li><div><strong>Mientras tanto, publicá una versión nueva</strong><span>En Plantillas, editá la inspección de excavadora y publicala con corte inmediato.</span></div></li>
+      <li><div><strong>Recuperá la señal</strong><span>La inspección entra sin duplicados, conserva su versión original y queda para revisión. Si fue No apto, el equipo se marca en el panel.</span></div></li>
+      <li><div><strong>Recorré la plataforma</strong><span>Corregí una inspección desde Reportes, cerrá un proyecto o revocá el acceso del inspector y mirá qué pasa en el teléfono.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="web-wrap">
+  <h2>Plataforma web central</h2>
+  <p>Administra accesos, equipos, plantillas, programación y reportes para todo el ecosistema, y concentra la revisión de casos especiales y la auditoría.</p>
+  <div class="scroll-x"><div class="web" id="web"></div></div>
+</section>
+
+<footer>
+  <div class="in">
+    <div class="claim">Ponemos tu proyecto Up &amp; Running.</div>
+    <div class="meta">voolkia.com · Argentina, Uruguay, USA</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function svg(p,w){w=w||20;return '<svg width="'+w+'" height="'+w+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';}
+  var I={
+    wifi:svg('<path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1"/>',16),
+    nowifi:svg('<path d="M3 3l18 18"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1"/>',16),
+    back:svg('<path d="M15 6l-6 6 6 6"/>',18),
+    cam:svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',16),
+    cal:svg('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4"/><path d="M16 3v4"/><path d="M4 10h16"/>',22),
+    plus:svg('<path d="M12 5v14"/><path d="M5 12h14"/>',22),
+    sync:svg('<path d="M20 8a8 8 0 0 0-14.5-2.5"/><path d="M4 4v4h4"/><path d="M4 16a8 8 0 0 0 14.5 2.5"/><path d="M20 20v-4h-4"/>',22),
+    id:svg('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="12" r="2.5"/><path d="M14 10h4"/><path d="M14 14h3"/>',20),
+    qr:svg('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/><path d="M20 14v7"/><path d="M14 20h3"/>',18),
+    pin:svg('<path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',16)
+  };
+  var LOGO='data:image/png;base64,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';
+  var PROP='<span class="prop">Propuesta Voolkia</span>';
+  var ROLES=['Administrador de aplicación','Inspector','Consulta'];
+  var ACTS={'Administrador de aplicación':['inspeccion.realizar','inspeccion.corregir','plantilla.publicar','programacion.gestionar','reporte.ver','roles.asignar'],
+    'Inspector':['inspeccion.realizar','inspeccion.ver_propias'],'Consulta':['reporte.ver']};
+  var LBL={'inspeccion.realizar':'Realizar inspecciones','inspeccion.corregir':'Observar y corregir inspecciones','plantilla.publicar':'Crear y publicar plantillas','programacion.gestionar':'Programar inspecciones','reporte.ver':'Consultar reportes','roles.asignar':'Asignar roles en su obra','inspeccion.ver_propias':'Consultar sus inspecciones'};
+  var FTYPES=['Texto','Número','Fecha','Lista de opciones','Persona','Ubicación'];
+  var RESULTS=['Apto','Apto con observaciones','No apto'];
+  function clone(o){return JSON.parse(JSON.stringify(o));}
+  function now(){var d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function hex(){return Math.floor(Math.random()*65536).toString(16).padStart(4,'0');}
+  function uniq(a){return a.filter(function(x,i){return a.indexOf(x)===i;});}
+  function actsOf(roles){return uniq([].concat.apply([],roles.map(function(r){return ACTS[r]||[];})));}
+
+  // ---------- Servidor ----------
+  var BASECONDS=[['OK','Conforme'],['F','Falla'],['FS','Fuera de servicio'],['N/A','No aplica']];
+  var server={
+    people:{
+      jperez:{name:'Juan Pérez',short:'J. Pérez',legajo:'10482',activo:true},
+      mgomez:{name:'María Gómez',short:'M. Gómez',legajo:'10511',activo:true},
+      lsosa:{name:'Lucía Sosa',short:'L. Sosa',legajo:'10533',activo:true},
+      rdiaz:{name:'Raúl Díaz',short:'R. Díaz',legajo:'10390',activo:true},
+      cruiz:{name:'Carla Ruiz',short:'C. Ruiz',legajo:'10620',activo:true}
+    },
+    projects:{
+      anelo:{name:'Obra Añelo, Frente Norte',sap:'OB-2041',cliente:'Energía Patagónica',inicio:'03/02/2026',fin:'30/06/2027',estado:'Activo',sh:true},
+      sanjuan:{name:'Obra San Juan, Planta Granito',sap:'OB-1987',cliente:'Minera del Oeste',inicio:'15/08/2025',fin:'31/12/2026',estado:'Activo',sh:true},
+      rosario:{name:'Obra Rosario, Puerto',sap:'OB-1802',cliente:'Terminal Litoral',inicio:'01/03/2024',fin:'30/09/2026',estado:'Activo',sh:true}
+    },
+    assign:{jperez:{anelo:['Inspector'],sanjuan:['Administrador de aplicación'],rosario:[]},mgomez:{anelo:['Inspector'],sanjuan:[],rosario:[]},lsosa:{anelo:['Inspector'],sanjuan:[],rosario:[]},rdiaz:{anelo:[],sanjuan:['Inspector'],rosario:['Consulta']},cruiz:{anelo:[],sanjuan:[],rosario:[]}},
+    templates:{
+      t1:{code:'F-SSyMA-Verif-003',name:'Inspección de excavadora',projects:['anelo','sanjuan'],versions:[
+        {v:2,estado:'Vencida',corte:'15/09 23:59',equipo:true,fields:[{label:'Operador',type:'Persona',req:true}],conds:clone(BASECONDS),obsReq:['F','FS'],items:['Nivel de aceite hidráulico','Estado de mangueras y acoples','Luces y alarma de retroceso','Cinturón de seguridad','Extintor cargado y precintado']},
+        {v:3,estado:'Vigente',corte:null,equipo:true,fields:[{label:'Operador',type:'Persona',req:true},{label:'Ubicación',type:'Ubicación',req:false}],conds:clone(BASECONDS),obsReq:['F','FS'],items:['Nivel de aceite hidráulico','Estado de mangueras y acoples','Luces y alarma de retroceso','Cinturón de seguridad','Extintor cargado y precintado','Espejos y visibilidad']}]},
+      t2:{code:'F-SSyMA-Verif-011',name:'Inspección de andamios',projects:['anelo','sanjuan'],versions:[
+        {v:1,estado:'Vigente',corte:null,equipo:false,fields:[{label:'Sector',type:'Texto',req:true},{label:'Altura de trabajo (m)',type:'Número',req:true},{label:'Turno',type:'Lista de opciones',req:false,opts:['Mañana','Tarde','Noche']}],conds:clone(BASECONDS),obsReq:['F','FS'],items:['Bases y nivelación','Barandas y rodapiés','Plataformas completas','Anclajes a estructura','Señalización y acceso']}]}
+    },
+    sched:[
+      {id:'s1',proj:'anelo',tpl:'t1',user:'jperez',freq:'Diaria',when:'Hoy'},
+      {id:'s2',proj:'anelo',tpl:'t2',user:'jperez',freq:'Semanal, jueves',when:'Hoy'},
+      {id:'s3',proj:'anelo',tpl:'t1',user:'jperez',freq:'Diaria',when:'Mañana'},
+      {id:'s4',proj:'sanjuan',tpl:'t2',user:'jperez',freq:'Semanal, jueves',when:'Hoy'},
+      {id:'s5',proj:'anelo',tpl:'t2',user:'mgomez',freq:'Semanal, jueves',when:'Hoy'},
+      {id:'s6',proj:'anelo',tpl:'t2',user:'lsosa',freq:'Semanal, jueves',when:'Hoy'},
+      {id:'s7',proj:'sanjuan',tpl:'t1',user:'rdiaz',freq:'Diaria',when:'Hoy'}
+    ],
+    equipos:[
+      {code:'EX-14',desc:'Excavadora 20 t',proj:['anelo','sanjuan'],activo:true},
+      {code:'EX-21',desc:'Excavadora 30 t',proj:['anelo'],activo:true},
+      {code:'CA-07',desc:'Camión volcador',proj:['sanjuan'],activo:true},
+      {code:'MN-03',desc:'Motoniveladora',proj:['anelo'],activo:false}
+    ],
+    hist:{'EX-21':{day:'30 sep',result:'No apto',id:'INS-0387'},'EX-14':{day:'29 sep',result:'Apto',id:'INS-0371'},'CA-07':{day:'29 sep',result:'Apto',id:'INS-0372'}},
+    review:[{id:'r1',type:'Inspección duplicada',title:'Andamios, Sector B · Obra Añelo',desc:'Dos inspectores completaron sin conexión la misma programación semanal. Se conservaron ambas: la primera en sincronizar cumplió la programación y la segunda quedó vinculada como posible duplicado.',a:'INS-0398 · L. Sosa · Apto · confirmada 08:12, sincronizada 09:40',b:'INS-0401 · M. Gómez · Apto con observaciones · confirmada 08:30, sincronizada 11:05',done:null}],
+    audit:[
+      {t:'1 oct 11:05',x:'Se detectó posible duplicado en la programación de Andamios, Sector B (INS-0401).'},
+      {t:'30 sep 17:20',x:'Admin. de aplicación publicó la versión 3 de F-SSyMA-Verif-003; la versión 2 quedó vencida.'},
+      {t:'28 sep 09:40',x:'Admin. interno asignó a J. Pérez el rol Inspector en Seguridad e Higiene, Obra Añelo.'}
+    ],
+    insps:[],seq:412
+  };
+  function seedAns(n,bad){var a={};for(var k=0;k<n;k++)a[k]={c:'OK'};if(bad!=null)a[bad]={c:'F',obs:'Requiere ajuste antes de continuar.'};return a;}
+  [['a1','INS-0398','anelo','t2',1,'lsosa','Sector B','Apto','1 oct',0,'s6','08:12','09:40',null],
+   ['a2','INS-0401','anelo','t2',1,'mgomez','Sector B','Apto con observaciones','1 oct',0,'s5','08:30','11:05',2],
+   ['a3','INS-0387','anelo','t1',3,'jperez','EX-21','No apto','30 sep',1,null,'16:02','16:40',1],
+   ['a4','INS-0372','sanjuan','t1',2,'rdiaz','CA-07','Apto','29 sep',2,null,'07:45','08:10',null],
+   ['a5','INS-0365','sanjuan','t2',1,'rdiaz','Sector A','Apto con observaciones','29 sep',2,null,'10:20','10:21',3]
+  ].forEach(function(r){var t=server.templates[r[3]],ver=t.versions.filter(function(x){return x.v===r[4];})[0];
+    server.insps.push({uid:r[0],id:r[1],proj:r[2],tpl:r[3],ver:r[4],user:r[5],target:r[6],result:r[7],day:r[8],dayN:r[9],sched:r[10],local:r[11],server:r[12],synced:true,confirmed:true,observed:false,history:[],
+      form:{items:ver.items.slice(),conds:ver.conds,ans:seedAns(ver.items.length,r[13]),vals:{},obsGen:''}});});
+  function vigV(t){for(var i=t.versions.length-1;i>=0;i--){if(t.versions[i].estado==='Vigente')return t.versions[i];}return t.versions[t.versions.length-1];}
+  function audit(x){server.audit.unshift({t:'1 oct '+now(),x:x});}
+  function pName(id){return server.people[id]?server.people[id].short:id;}
+
+  // ---------- Dispositivo ----------
+  var S={screen:'login',online:true,known:false,proj:null,local:null,pendingDown:false,lastSync:'Sin sincronizar',F:null,modal:false};
+  function pullDown(){
+    if(!server.people.jperez.activo){wipe();return 'revoked';}
+    S.local={assign:clone(server.assign.jperez),projects:clone(server.projects),templates:clone(server.templates),sched:clone(server.sched),equipos:clone(server.equipos),hist:clone(server.hist),people:clone(server.people)};
+    S.pendingDown=false;S.lastSync='hoy '+now();return 'ok';
+  }
+  function wipe(){S.known=false;S.local=null;S.screen='login';S.proj=null;S.F=null;S.modal=false;}
+  function roles(p){return (S.local.assign[p]||[]);}
+  function roleTxt(p){var r=roles(p);return r.length?r.join(' + '):'Sin acceso';}
+  function closed(p){return S.local.projects[p].estado!=='Activo';}
+  function can(x){if(!S.proj)return false;if(x==='inspeccion.realizar'&&closed(S.proj))return false;return actsOf(roles(S.proj)).indexOf(x)>=0;}
+  function projs(){return Object.keys(S.local.projects).filter(function(p){return roles(p).length&&S.local.projects[p].sh;});}
+  function mine(){return server.insps.filter(function(i){return i.user==='jperez'&&i.dayN===0&&!i.seed;});}
+  function pend(){return server.insps.filter(function(i){return i.user==='jperez'&&i.confirmed&&!i.synced;});}
+  function stateOf(i){if(!i.confirmed)return['Borrador','bor'];if(!i.synced)return['Pendiente de sincronización','q'];if(i.observed)return['Observada','obs'];return['Sincronizada','ok'];}
+  function inspForSched(sid){return server.insps.filter(function(i){return i.sched===sid&&i.user==='jperez';})[0];}
+  function verOf(tplId,v){var t=S.local.templates[tplId];return t.versions.filter(function(x){return x.v===v;})[0]||vigV(t);}
+
+  var app=document.getElementById('app'),toastTimer;
+  function sig(){var n=pend().length;return S.online?'<div class="pill on">'+I.wifi+'<span>En línea, todo sincronizado</span></div>':'<div class="pill off">'+I.nowifi+'<span>Sin conexión, '+(n===1?'1 inspección':n+' inspecciones')+' en cola</span></div>';}
+  function headBar(title,sub,extra){return '<div class="app-head"><div class="row"><div><img class="hd-logo" src="'+LOGO+'" alt="Milicic"><div class="brand">Seguridad e Higiene</div><div class="obra">'+title+'</div><div class="who">'+sub+'</div></div><button class="sig-btn" data-a="toggle">'+(S.online?'Simular sin señal':'Recuperar señal')+'</button></div>'+sig()+(extra||'')+'</div>';}
+
+  function vLogin(){
+    var shield='<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>';
+    var lock=svg('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',18);
+    var okI=svg('<circle cx="12" cy="12" r="9"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',16), infoI=svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/>',16);
+    var note=S.known?'<div class="lg-note ok">'+okI+'<span>Dispositivo reconocido. Podés ingresar también sin conexión.</span></div>'
+      :(S.online?'<div class="lg-note">'+infoI+'<span>El primer ingreso requiere conexión. Después, la app funciona sin señal en este dispositivo.</span></div>'
+                :'<div class="lg-note warn">'+infoI+'<span>Sin conexión. El primer ingreso en este dispositivo necesita señal.</span></div>');
+    return '<div class="login2"><div class="stripes" aria-hidden="true"></div>'+
+      '<div class="lg-top"><span class="lg-net'+(S.online?'':' off')+'"><span class="d"></span>'+(S.online?'En línea':'Sin señal')+'</span><button class="sig-mini" data-a="toggle">'+(S.online?'Simular sin señal':'Recuperar señal')+'</button></div>'+
+      '<div class="lg-hero"><div class="lg-badge">'+shield+'</div><img class="lg-logo" src="'+LOGO+'" alt="Milicic"><div class="lg-title">Seguridad<br>e Higiene</div><p class="lg-sub">Inspecciones en obra, con o sin señal.</p><div class="tagline">Construyendo confianza</div></div>'+
+      '<div class="lg-card"><button class="ms2" data-a="login">'+lock+'Ingresar con cuenta Milicic</button>'+note+'</div>'+
+      '<div class="lg-foot">'+svg('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',12)+'Datos cifrados en el dispositivo</div></div>';
+  }
+  function vProjects(){
+    var l=projs().map(function(p){return '<button class="proj" data-a="proj" data-v="'+p+'"><div><div class="t">'+S.local.projects[p].name+'</div><div class="s">'+(closed(p)?'Proyecto cerrado, solo consulta':'Tocá para ingresar')+'</div></div><span class="role">'+roleTxt(p)+'</span></button>';}).join('');
+    return headBar('Elegí la obra','J. Pérez','<button class="linkbtn" data-a="logout">Cerrar sesión</button>')+'<div class="app-body" id="body"><p class="hint2">Tus permisos dependen de la obra.</p>'+(l||'<div class="infonote">No tenés obras habilitadas en esta aplicación.</div>')+'</div>';
+  }
+  function schedCard(s){
+    var t=S.local.templates[s.tpl],i=inspForSched(s.id),st=i?stateOf(i):['Pendiente','pend'];
+    return '<button class="sched" data-a="openSched" data-v="'+s.id+'"><div><div class="t">'+t.name+'</div><div class="s">'+t.code+' · '+s.freq+'</div></div><span class="st '+st[1]+'">'+st[0]+'</span></button>';
+  }
+  function vCal(){
+    var ms=S.local.sched.filter(function(s){return s.proj===S.proj&&s.user==='jperez';});
+    var hoy=ms.filter(function(s){return s.when==='Hoy';}).map(schedCard).join('');
+    var prox=ms.filter(function(s){return s.when!=='Hoy';}).map(function(s){var t=S.local.templates[s.tpl];return '<div class="sched" style="opacity:.75"><div><div class="t">'+t.name+'</div><div class="s">'+s.when+' · '+s.freq+'</div></div><span class="st pend">Programada</span></div>';}).join('');
+    var note='';
+    if(closed(S.proj))note='<div class="infonote">Este proyecto está cerrado: podés consultar la información, pero no iniciar nuevas inspecciones.</div>';
+    else if(!can('inspeccion.realizar'))note='<div class="infonote">Tu rol en esta obra es de consulta: no podés realizar inspecciones.</div>';
+    var adm=roles(S.proj).indexOf('Administrador de aplicación')>=0?'<div class="infonote">Como administrador de esta obra, gestionás plantillas, programación y correcciones desde la plataforma web.</div>':'';
+    return note+'<h3 class="cal-day">Hoy, jueves 1 de octubre</h3>'+(hoy||'<div class="infonote">No tenés inspecciones programadas para hoy.</div>')+(prox?'<h3 class="cal-day">Próximas</h3>'+prox:'')+adm;
+  }
+  function vNew(){
+    var l=Object.keys(S.local.templates).filter(function(k){return S.local.templates[k].projects.indexOf(S.proj)>=0;}).map(function(k){var t=S.local.templates[k],v=vigV(t);return '<button class="tplitem" data-a="newInsp" data-v="'+k+'"><span style="font-weight:600">'+t.name+'</span><span class="vtag">'+t.code+' · versión '+v.v+' · '+v.items.length+' ítems</span></button>';}).join('');
+    return '<h3 class="cal-day">Nueva inspección</h3><p class="hint2">Plantillas habilitadas para esta obra.</p>'+(l||'<div class="infonote">No hay plantillas habilitadas en esta obra.</div>');
+  }
+  function vQueue(){
+    var all=mine(),p=pend();
+    var list=all.length?all.map(function(i){var st=stateOf(i),t=S.local.templates[i.tpl]||server.templates[i.tpl];return '<div class="card" style="gap:4px"><div style="display:flex;justify-content:space-between;gap:8px"><b>'+t.name+'</b><span class="st '+st[1]+'">'+st[0]+'</span></div><div class="uid">ID '+i.uid+'</div><div style="font-size:12px;color:var(--muted)">'+i.id+' · '+esc(i.target)+' · v'+i.ver+(i.local?' · hora local '+i.local:'')+(i.server?' · servidor '+i.server:'')+'</div></div>';}).join(''):'<div class="infonote">Todavía no realizaste inspecciones hoy.</div>';
+    return '<h3 class="cal-day">Mis inspecciones de hoy</h3><div class="card"><div class="kv"><span>Pendientes de sincronización</span><b>'+p.length+'</b></div><div class="kv"><span>Plantillas y permisos</span><b>'+(S.pendingDown?'Actualización pendiente':'Al día')+'</b></div><div class="kv"><span>Última sincronización</span><b>'+S.lastSync+'</b></div></div>'+list+
+      '<div class="explain">Cada inspección lleva un identificador único generado en este dispositivo y se guarda cifrada junto con sus fotos hasta sincronizar. Si un envío se reintenta, el servidor la reconoce y no la duplica.</div>';
+  }
+  function curV(){return verOf(S.F.tpl,S.F.ver);}
+  function missing(){
+    var F=S.F,v=curV(),m=[];
+    if(v.equipo&&!F.target)m.push('elegir el equipo');
+    v.fields.forEach(function(f,i){if(f.req&&!String(F.vals[i]||'').trim())m.push('completar '+f.label.toLowerCase());});
+    var un=v.items.filter(function(_,k){return !F.ans[k]||!F.ans[k].c;}).length;if(un)m.push('responder '+un+(un===1?' ítem':' ítems'));
+    var no=v.items.filter(function(_,k){var a=F.ans[k];return a&&v.obsReq.indexOf(a.c)>=0&&!(a.obs||'').trim();}).length;if(no)m.push('completar '+no+(no===1?' observación obligatoria':' observaciones obligatorias'));
+    if(!F.result)m.push('elegir el resultado final');
+    return m;
+  }
+  function fieldInput(f,i,val){
+    var id='fv'+i,lab='<label for="'+id+'">'+esc(f.label)+(f.req?'':' (opcional)')+'</label>';
+    if(f.type==='Número')return '<div class="field">'+lab+'<input class="inp" id="'+id+'" data-fv="'+i+'" inputmode="decimal" value="'+esc(val)+'"></div>';
+    if(f.type==='Fecha')return '<div class="field">'+lab+'<input class="inp" type="date" id="'+id+'" data-fv="'+i+'" value="'+esc(val)+'"></div>';
+    if(f.type==='Lista de opciones')return '<div class="field">'+lab+'<select class="selm" id="'+id+'" data-fv="'+i+'"><option value="">Elegir</option>'+(f.opts||['Opción 1','Opción 2']).map(function(o){return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select></div>';
+    if(f.type==='Persona'){var ps=Object.keys(S.local.people).filter(function(k){return S.local.people[k].activo;});return '<div class="field">'+lab+'<select class="selm" id="'+id+'" data-fv="'+i+'"><option value="">Elegir persona</option>'+ps.map(function(k){var n=S.local.people[k].name;return '<option'+(n===val?' selected':'')+'>'+n+'</option>';}).join('')+'</select></div>';}
+    if(f.type==='Ubicación')return '<div class="field"><span class="lbl">'+esc(f.label)+(f.req?'':' (opcional)')+'</span>'+(val?'<div class="hist">'+I.pin+'<span>'+esc(val)+'</span></div>':'<button class="photo-btn" data-a="gps" data-k="'+i+'">'+I.pin+'Usar ubicación del dispositivo</button>')+'</div>';
+    return '<div class="field">'+lab+'<input class="inp" id="'+id+'" data-fv="'+i+'" value="'+esc(val)+'"></div>';
+  }
+  function histCard(code){var h=S.local.hist[code];if(!h)return '<div class="hist"><span class="dot n"></span><span>Sin inspecciones previas de este equipo.</span></div>';
+    var c=h.result==='Apto'?'g':h.result==='No apto'?'r':'y';
+    return '<div class="hist"><span class="dot '+c+'"></span><span>Última inspección: <b>'+h.result+'</b>, '+h.day+' ('+h.id+'). Disponible sin conexión.</span></div>'+(h.result==='No apto'?'<div class="warn">Este equipo quedó como No apto en la última inspección.</div>':'');}
+  function vInsp(){
+    var F=S.F,t=S.local.templates[F.tpl],v=curV(),ident='';
+    if(v.equipo){var eqs=S.local.equipos.filter(function(e){return e.activo&&e.proj.indexOf(S.proj)>=0;});
+      ident='<div class="field"><span class="lbl">Equipo (solo activos de esta obra)</span><button class="qr" data-a="qr">'+I.qr+'Escanear QR del equipo</button><div style="align-self:flex-start">'+PROP+'</div>'+
+        eqs.map(function(e){return '<button class="eq" data-a="eq" data-v="'+e.code+'" aria-pressed="'+(F.target===e.code)+'"><span>'+e.code+'</span><small>'+e.desc+'</small></button>';}).join('')+
+        (F.target?histCard(F.target)+'<div style="align-self:flex-start">'+PROP+'</div>':'')+'</div>';}
+    var fields=v.fields.map(function(f,i){return fieldInput(f,i,F.vals[i]);}).join('');
+    var items=v.items.map(function(q,k){var a=F.ans[k]||{},req=v.obsReq.indexOf(a.c)>=0;
+      var chips=v.conds.map(function(c){return '<button class="cond'+(v.obsReq.indexOf(c[0])>=0?' bad':'')+'" data-a="cond" data-k="'+k+'" data-v="'+esc(c[0])+'" aria-pressed="'+(a.c===c[0])+'" title="'+esc(c[1])+'">'+esc(c[0])+'</button>';}).join('');
+      var fotos='';for(var f=0;f<(a.fotos||0);f++)fotos+='<div class="foto" style="width:64px;height:64px;font-size:9px;text-align:center;line-height:1.2">Foto '+(f+1)+'<br>'+esc(a.ts[f])+'</div>';
+      return '<div class="irow"><div class="q">'+(k+1)+'. '+esc(q)+'</div><div class="conds" role="group" aria-label="Condición">'+chips+'</div>'+
+        (req?'<label class="req-note" for="obs'+k+'">Observación obligatoria para '+esc(a.c)+'</label><textarea class="ta req" id="obs'+k+'" data-obs="'+k+'">'+esc(a.obs||'')+'</textarea>':'')+
+        '<div class="fotos">'+fotos+'<button class="photo-btn" data-a="foto" data-k="'+k+'">'+I.cam+'Foto</button></div></div>';}).join('');
+    var res=RESULTS.map(function(r){return '<button class="eq" data-a="res" data-v="'+r+'" aria-pressed="'+(F.result===r)+'"><span>'+r+'</span></button>';}).join('');
+    return '<div class="form-head"><button class="back" data-a="go" data-v="cal" aria-label="Volver">'+I.back+'</button><div><h3>'+t.name+'</h3><div class="vtag">'+t.code+' · versión '+F.ver+'</div></div></div>'+
+      ident+fields+'<p class="legend">Condiciones: '+v.conds.map(function(c){return '<b>'+esc(c[0])+'</b> '+esc(c[1]);}).join(', ')+'. Exigen observación: '+v.obsReq.join(', ')+'.</p>'+items+
+      '<div class="field"><span class="lbl">Resultado final (lo define el inspector)</span>'+res+'</div>'+
+      '<div class="field"><label for="obsgen">Observaciones generales</label><textarea class="ta" id="obsgen" data-gen="1">'+esc(F.obsGen)+'</textarea></div>'+
+      '<div id="miss" class="missing" aria-live="polite"></div><button class="primary" id="confirmBtn" data-a="askConfirm">Confirmar inspección</button><button class="secondary" data-a="draft">Guardar borrador</button>';
+  }
+  function vModal(){return '<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="sheet"><h4 id="mt">Confirmar con tu identidad</h4><p class="hint2">Vas a confirmar la inspección como <b>J. Pérez</b> (jperez@milicic.com.ar). Esta confirmación reemplaza la firma manuscrita y queda registrada con la hora del dispositivo.</p><button class="primary" data-a="confirm">'+I.id+'Confirmar como J. Pérez</button><button class="secondary" data-a="cancelModal">Volver a revisar</button></div></div>';}
+  function nav(){function b(v,ic,l){return '<button data-a="go" data-v="'+v+'"'+(S.screen===v?' aria-current="page"':'')+'>'+ic+l+'</button>';}
+    return '<nav class="nav" aria-label="Secciones">'+b('cal',I.cal,'Calendario')+(can('inspeccion.realizar')?b('new',I.plus,'Nueva'):'')+b('queue',I.sync,'Mis inspecciones')+'</nav>';}
+  function render(){
+    var h;
+    if(S.screen==='login')h=vLogin();
+    else if(S.screen==='projects')h=vProjects();
+    else{var body=S.screen==='insp'?vInsp():S.screen==='new'?vNew():S.screen==='queue'?vQueue():vCal();
+      h=headBar(S.local.projects[S.proj].name,'J. Pérez · Rol: '+roleTxt(S.proj),'<button class="linkbtn" data-a="go" data-v="projects">Cambiar de obra</button>')+'<div class="app-body" id="body">'+body+'</div>'+(S.screen==='insp'?'':nav());
+      if(S.modal)h+=vModal();}
+    app.innerHTML=h+'<div class="toast'+(S.screen==='login'?' top':'')+'" id="toast" role="status" aria-live="polite"></div>';
+    if(S.screen==='insp')updMiss();
+  }
+  function updMiss(){var m=missing(),el=document.getElementById('miss'),b=document.getElementById('confirmBtn');if(!el)return;el.textContent=m.length?'Falta: '+m.join(', ')+'.':'';b.disabled=m.length>0;}
+  function toast(m){var t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){var x=document.getElementById('toast');if(x)x.classList.remove('show');},4500);}
+
+  function openInsp(sid,tpl){
+    var ex=sid?inspForSched(sid):null;
+    if(ex&&ex.confirmed)return 'Esta inspección ya fue confirmada. Las correcciones las realiza el administrador del proyecto.';
+    if(ex){S.F=clone(ex.formState);S.F.uidRef=ex.uid;}
+    else{var v=vigV(S.local.templates[tpl]);S.F={sched:sid,tpl:tpl,ver:v.v,target:'',vals:{},ans:{},result:'',obsGen:'',uidRef:null};}
+    S.screen='insp';return null;
+  }
+  function storeInsp(confirmed){
+    var F=S.F,ex=F.uidRef?server.insps.filter(function(i){return i.uid===F.uidRef;})[0]:null,v=curV();
+    var rec=ex||{uid:hex()+'-'+hex(),id:'INS-0'+(++server.seq),proj:S.proj,tpl:F.tpl,user:'jperez',day:'1 oct',dayN:0,synced:false,observed:false,history:[]};
+    rec.sched=F.sched;rec.ver=F.ver;rec.target=F.target||(F.vals[0]||'');rec.result=F.result;rec.confirmed=confirmed;rec.formState=clone(F);
+    rec.form={items:v.items.slice(),conds:v.conds,ans:clone(F.ans),vals:clone(F.vals),fields:v.fields,obsGen:F.obsGen};
+    if(confirmed)rec.local=now();
+    if(!ex)server.insps.unshift(rec);
+    return rec;
+  }
+  function receive(rec){
+    rec.synced=true;rec.server=now();var t=server.templates[rec.tpl],cur=vigV(t).v,fl=0;
+    if(rec.ver<cur){server.review.unshift({id:'r'+hex(),type:'Versión vencida',title:t.name+' · '+rec.id,desc:'La inspección se inició con la versión '+rec.ver+' y llegó después del corte. Se aceptó y conserva su versión original, identificada para revisión.',a:rec.id+' · J. Pérez · '+rec.result+' · versión '+rec.ver,b:'Versión vigente al sincronizar: '+cur,done:null});fl=1;}
+    if(rec.sched){var d=server.insps.filter(function(i){return i!==rec&&i.sched===rec.sched&&i.synced&&i.dayN===0;});
+      if(d.length)server.review.unshift({id:'r'+hex(),type:'Inspección duplicada',title:t.name+' · '+server.projects[rec.proj].name,desc:'Otra inspección ya había cumplido esta programación. Se conservaron ambas y la segunda quedó vinculada como posible duplicado.',a:d[0].id,b:rec.id,done:null});}
+    if(vigV(t).equipo&&rec.target)server.hist[rec.target]={day:'1 oct',result:rec.result,id:rec.id};
+    audit('Inspección '+rec.id+' de J. Pérez sincronizada (hora local '+rec.local+', servidor '+rec.server+').');
+    return fl;
+  }
+  function checkAccess(){if(S.screen==='login')return;if(S.proj&&projs().indexOf(S.proj)<0){S.proj=null;S.screen='projects';S.F=null;S.modal=false;return 'Ya no tenés acceso a esa obra.';}
+    if(S.proj&&!can('inspeccion.realizar')&&(S.screen==='insp'||S.screen==='new')){S.screen='cal';S.F=null;S.modal=false;}}
+  function serverChanged(){
+    if(S.online&&S.known){var r=pullDown();var m=r==='revoked'?'Acceso revocado desde la plataforma: la información local se borró del dispositivo.':(checkAccess()||'Se actualizaron plantillas, programación y permisos.');render();toast(m);}
+    else if(S.known){S.pendingDown=true;render();}
+    renderWeb();
+  }
+
+  app.addEventListener('input',function(e){
+    if(!S.F)return;var el=e.target;
+    if(el.getAttribute('data-fv')!=null){S.F.vals[el.getAttribute('data-fv')]=el.value;}
+    else if(el.getAttribute('data-obs')!=null){S.F.ans[el.getAttribute('data-obs')].obs=el.value;}
+    else if(el.getAttribute('data-gen')){S.F.obsGen=el.value;}
+    updMiss();
+  });
+  app.addEventListener('change',function(e){if(S.F&&e.target.getAttribute('data-fv')!=null){S.F.vals[e.target.getAttribute('data-fv')]=e.target.value;updMiss();}});
+  app.addEventListener('click',function(e){
+    var b=e.target.closest('[data-a]');if(!b)return;
+    var a=b.getAttribute('data-a'),v=b.getAttribute('data-v'),k=b.getAttribute('data-k'),msg=null,keep=true;
+    if(a==='login'){
+      if(!S.online&&!S.known){msg='El primer ingreso en este dispositivo requiere conexión.';}
+      else if(S.online&&!server.people.jperez.activo){msg='Tu usuario no tiene acceso. Contactá al administrador.';}
+      else{if(S.online){pullDown();msg='Sesión iniciada. Plantillas, equipos, permisos y calendario descargados.';}else msg='Ingreso sin conexión en dispositivo reconocido.';S.known=true;S.screen='projects';keep=false;}
+    }
+    else if(a==='logout'){S.screen='login';S.proj=null;keep=false;}
+    else if(a==='proj'){S.proj=v;S.screen='cal';keep=false;}
+    else if(a==='go'){S.screen=v;if(v==='projects')S.proj=null;if(v!=='insp')S.F=null;keep=false;}
+    else if(a==='openSched'){var s=S.local.sched.filter(function(x){return x.id===v;})[0];if(!can('inspeccion.realizar'))msg=closed(S.proj)?'El proyecto está cerrado: solo consulta.':'Tu rol en esta obra no permite realizar inspecciones.';else{msg=openInsp(v,s.tpl);keep=false;}}
+    else if(a==='newInsp'){openInsp(null,v);keep=false;}
+    else if(a==='eq'){S.F.target=v;}
+    else if(a==='qr'){var eq=S.local.equipos.filter(function(x){return x.activo&&x.proj.indexOf(S.proj)>=0;});if(eq.length){S.F.target=eq[eq.length>1?1:0].code;msg='QR leído: equipo '+S.F.target+'. Sin errores de selección.';}}
+    else if(a==='gps'){S.F.vals[k]='Lat. -38,7183 · Long. -62,2663 (GPS del dispositivo)';}
+    else if(a==='cond'){S.F.ans[k]=S.F.ans[k]||{};S.F.ans[k].c=v;}
+    else if(a==='foto'){var A=S.F.ans[k]=S.F.ans[k]||{};A.ts=A.ts||[];if((A.fotos||0)<4){A.fotos=(A.fotos||0)+1;A.ts.push(now()+' · '+S.local.projects[S.proj].name.split(',')[0].replace('Obra ',''));}}
+    else if(a==='res'){S.F.result=v;}
+    else if(a==='draft'){storeInsp(false);S.F=null;S.screen='cal';msg='Borrador guardado en el dispositivo.';keep=false;}
+    else if(a==='askConfirm'){if(missing().length)return;S.modal=true;}
+    else if(a==='cancelModal'){S.modal=false;}
+    else if(a==='confirm'){var rec=storeInsp(true);S.modal=false;S.F=null;S.screen='cal';keep=false;
+      if(S.online){var fl=receive(rec);S.lastSync='hoy '+now();msg='Inspección confirmada y sincronizada.'+(fl?' Quedó para revisión por versión vencida.':'');renderWeb();}
+      else msg='Inspección guardada cifrada en el dispositivo. Se enviará sola al recuperar señal.';}
+    else if(a==='toggle'){
+      if(S.online){S.online=false;msg='Sin señal. Podés seguir inspeccionando con normalidad.';}
+      else{S.online=true;
+        if(!S.known){msg='Señal recuperada.';}
+        else{var p=pend(),f=0;p.forEach(function(r){f+=receive(r);});var pd=S.pendingDown,r2=pullDown();
+          if(r2==='revoked')msg='Señal recuperada: se enviaron '+p.length+' inspecciones pendientes y luego se aplicó la revocación del acceso. La información local se borró.';
+          else{var ca=checkAccess();var parts=[];if(p.length)parts.push(p.length+(p.length===1?' inspección sincronizada':' inspecciones sincronizadas')+', sin duplicados');if(pd)parts.push('plantillas, programación y permisos actualizados');
+            msg=(parts.length?'Señal recuperada: '+parts.join('; ')+'.':'Señal recuperada. No había nada pendiente.')+(f?' Una quedó para revisión por versión vencida.':'')+(ca?' '+ca:'');}
+        }
+        renderWeb();}
+    }
+    var sc=(document.getElementById('body')||{}).scrollTop||0;render();
+    if(keep){var bd=document.getElementById('body');if(bd)bd.scrollTop=sc;}
+    if(msg)toast(msg);
+  });
+
+  // ---------- Plataforma web ----------
+  var web=document.getElementById('web');
+  var W={tab:'panel',person:'jperez',qp:'anelo',techOpen:false,tplSel:'t1',draft:null,corte:'Ahora',imp:null,f:{p:'todos',t:'todos',u:'todos',e:'todos',per:'todos',r:'todos'},detail:null,flash:null,np:{tpl:'t1',user:'jperez',proj:'anelo',freq:'Diaria'},newP:{name:'',legajo:''},newProj:{name:'',sap:'',cliente:''}};
+  function fl(){var f=W.flash;W.flash=null;return f?'<div class="flash '+(f.ok?'ok':'wait')+'" role="status">'+f.t+'</div>':'';}
+  function phoneNote(){return !S.known?{ok:true,t:'Cambio aplicado.'}:S.online?{ok:true,t:'Cambio aplicado. El teléfono de J. Pérez ya lo recibió.'}:{ok:false,t:'Cambio guardado. El teléfono está sin señal: lo recibirá en su próxima sincronización.'};}
+  function sel(id,opts,cur,label,cls){return '<label style="position:absolute;left:-9999px" for="'+id+'">'+label+'</label><select class="'+(cls||'sel')+'" id="'+id+'">'+opts.map(function(o){var val=Array.isArray(o)?o[0]:o,txt=Array.isArray(o)?o[1]:o;return '<option value="'+esc(val)+'"'+(val===cur?' selected':'')+'>'+esc(txt)+'</option>';}).join('')+'</select>';}
+  function projOpts(){return Object.keys(server.projects).map(function(p){return [p,server.projects[p].name];});}
+  function td(x){return '<td>'+x+'</td>';}
+
+  function vPanel(){
+    var cards=Object.keys(server.projects).filter(function(p){return server.projects[p].sh&&server.projects[p].estado==='Activo';}).map(function(p){
+      var prog=server.sched.filter(function(s){return s.proj===p&&s.when==='Hoy';}),done=prog.filter(function(s){return server.insps.some(function(i){return i.sched===s.id&&i.synced;});}).length,pct=prog.length?Math.round(done/prog.length*100):0;
+      return '<div class="kpib"><span style="font-weight:600;color:var(--ink)">'+server.projects[p].name+'</span><b>'+pct+'%</b><span>'+done+' de '+prog.length+' inspecciones programadas para hoy</span><div class="bar"><i style="width:'+pct+'%"></i></div></div>';}).join('');
+    var noapto=Object.keys(server.hist).filter(function(c){return server.hist[c].result==='No apto';}).map(function(c){var h=server.hist[c];return '<tr><td><span class="dot r" style="display:inline-block;vertical-align:middle;margin-right:8px"></span><b>'+c+'</b></td>'+td(h.id)+td(h.day)+'</tr>';}).join('');
+    var p=pend().length;
+    var dev='<tr>'+td('<b>J. Pérez</b>')+td(S.known?(S.online?'<span class="tag ok">En línea</span>':'<span class="tag q">Sin señal</span>'):'Sin sesión')+td(p)+td(S.lastSync)+'</tr><tr>'+td('<b>M. Gómez</b>')+td('<span class="tag ok">En línea</span>')+td('0')+td('hoy 11:05')+'</tr><tr>'+td('<b>R. Díaz</b>')+td('<span class="tag q">Sin señal</span>')+td('2')+td('ayer 18:40')+'</tr>';
+    return '<div style="display:flex;gap:10px;align-items:center">'+PROP+'<span class="hint2">Panel sugerido por Voolkia para el seguimiento diario de Seguridad e Higiene.</span></div>'+
+      '<div class="kpig" style="grid-template-columns:repeat(3,minmax(0,1fr))">'+cards+'</div>'+
+      '<div class="twocol"><div class="detail" style="gap:10px"><h4 style="font-size:22px">Equipos no aptos</h4><p class="hint2">Según su última inspección sincronizada. El inspector lo ve también en el teléfono, sin señal.</p><table class="atable"><thead><tr><th>Equipo</th><th>Inspección</th><th>Fecha</th></tr></thead><tbody>'+(noapto||'<tr><td colspan="3">Sin equipos no aptos.</td></tr>')+'</tbody></table></div>'+
+      '<div class="detail" style="gap:10px"><h4 style="font-size:22px">Salud de sincronización</h4><p class="hint2">Detecta dispositivos con inspecciones sin enviar antes de que se pierda información.</p><table class="atable"><thead><tr><th>Inspector</th><th>Estado</th><th>En cola</th><th>Última sinc.</th></tr></thead><tbody>'+dev+'</tbody></table></div></div>';
+  }
+  function vPersonas(){
+    var pid=W.person,P=server.people[pid],as=server.assign[pid];
+    var list=Object.keys(server.people).map(function(k){var pp=server.people[k],has=Object.keys(server.assign[k]).some(function(p){return server.assign[k][p].length;});
+      return '<button class="tplitem" data-w="person" data-v="'+k+'" aria-pressed="'+(k===pid)+'"><span style="font-weight:600">'+pp.name+'</span><span class="vtag">Legajo '+pp.legajo+' · '+(!pp.activo?'Inactiva':has?'Usuario habilitado':'Registrada, sin acceso')+'</span></button>';}).join('');
+    var rows=Object.keys(server.projects).map(function(p){return '<tr><td>'+server.projects[p].name+(server.projects[p].sh?'':'<div class="hint2">App no habilitada en esta obra</div>')+'</td><td>'+ROLES.map(function(r){var id='rl-'+p+'-'+ROLES.indexOf(r);return '<label class="ck" for="'+id+'"><input type="checkbox" id="'+id+'" data-role="'+p+'|'+r+'"'+(as[p].indexOf(r)>=0?' checked':'')+(P.activo?'':' disabled')+'>'+r+'</label>';}).join('')+'</td></tr>';}).join('');
+    var r=as[W.qp],ac=actsOf(r),ok=r.length&&server.projects[W.qp].sh&&P.activo;
+    var human=!ok?'<div class="flash wait">Denegado: '+(!P.activo?'la persona está inactiva.':!server.projects[W.qp].sh?'la aplicación no está habilitada en esta obra.':'no tiene roles en esta obra.')+'</div>':'<div class="card" style="gap:8px;background:#F7F5F0"><div style="font-size:14px">Roles: <strong>'+r.join(' + ')+'</strong></div><ul style="margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:4px">'+ac.map(function(x){return '<li>'+LBL[x]+'</li>';}).join('')+'</ul></div>';
+    var tech='<pre class="api"><span class="k">GET</span> /v1/autorizacion?usuario='+pid+'&amp;proyecto='+W.qp+'&amp;app=seguridad-higiene\n\n{\n  <span class="k">"permitido"</span>: '+(ok?'true':'false')+',\n  <span class="k">"roles"</span>: '+JSON.stringify(ok?r:[])+',\n  <span class="k">"acciones"</span>: ['+(ok&&ac.length?'\n    "'+ac.join('",\n    "')+'"\n  ':'')+']\n}</pre>';
+    var rev=pid==='jperez'?(P.activo?'<button class="btn-line" data-w="revoke">Revocar acceso y borrar datos del dispositivo</button>':'<button class="btn-soft" data-w="reactivate">Reactivar persona</button>'):(P.activo?'<button class="btn-soft" data-w="deact">Desactivar (baja lógica)</button>':'<button class="btn-soft" data-w="reactivate">Reactivar persona</button>');
+    return '<div class="cols"><div class="list" style="width:270px"><h4>Personas</h4>'+list+
+      '<div class="detail" style="gap:8px;padding:14px;margin-top:8px"><div style="font-weight:600;font-size:14px">Alta manual</div><label style="position:absolute;left:-9999px" for="np-name">Nombre</label><input class="mini-in" id="np-name" placeholder="Nombre y apellido" value="'+esc(W.newP.name)+'"><label style="position:absolute;left:-9999px" for="np-leg">Legajo</label><input class="mini-in" id="np-leg" placeholder="Legajo (clave única)" value="'+esc(W.newP.legajo)+'"><button class="btn-dark" style="min-height:40px" data-w="addPerson">Dar de alta</button><span class="hint2">Probá con el legajo 10482: la plataforma evita duplicados.</span></div></div>'+
+      '<div style="flex:1;display:flex;flex-direction:column;gap:16px">'+fl()+
+      '<div class="detail" style="gap:12px"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap"><div class="person"><div class="avatar">'+P.name.split(' ').map(function(x){return x[0];}).join('')+'</div><div><div style="font-weight:600;font-size:18px">'+P.name+'</div><div class="hint2">Legajo '+P.legajo+' · Preparada para conciliar con SuccessFactors · '+(P.activo?'Activa':'Inactiva, conserva historial')+'</div></div></div>'+rev+'</div>'+
+      '<p class="hint2">Puede tener uno o más roles por obra. Para operar necesita al menos un rol, estar asociada a la obra y que la aplicación esté habilitada.</p><table class="atable"><thead><tr><th>Obra</th><th>Roles en Seguridad e Higiene</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+      '<div class="detail" style="gap:12px"><h4 style="font-size:20px">Consulta de permisos</h4><p class="hint2">Lo que cada aplicación le pregunta a la plataforma. Por defecto, se deniega.</p>'+sel('qp',projOpts(),W.qp,'Obra')+human+
+      '<details'+(W.techOpen?' open':'')+' id="techdet"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-dark);min-height:32px;display:flex;align-items:center">Ver la respuesta técnica (para equipos de sistemas)</summary><div style="margin-top:8px">'+tech+'</div></details></div></div></div>';
+  }
+  function vProyectos(){
+    var rows=Object.keys(server.projects).map(function(p){var x=server.projects[p];return '<tr><td style="font-weight:600">'+x.name+'</td>'+td(x.sap)+td(x.cliente)+td(x.inicio+' a '+x.fin)+'<td>'+(x.estado==='Activo'?'<span class="tag ok">Activo</span>':'<span class="tag q">Cerrado</span>')+'</td><td><label class="ck" for="sh-'+p+'"><input type="checkbox" id="sh-'+p+'" data-sh="'+p+'"'+(x.sh?' checked':'')+'>Seguridad e Higiene</label></td><td><button class="btn-soft" style="min-height:36px;padding:0 10px;font-size:13px" data-w="'+(x.estado==='Activo'?'close':'reopen')+'" data-v="'+p+'">'+(x.estado==='Activo'?'Cerrar':'Reabrir')+'</button></td></tr>';}).join('');
+    var np=W.newProj;
+    return fl()+'<div class="detail" style="gap:12px"><table class="atable"><thead><tr><th>Proyecto</th><th>Código SAP</th><th>Cliente</th><th>Vigencia</th><th>Estado</th><th>Aplicaciones</th><th></th></tr></thead><tbody>'+rows+'</tbody></table><p class="hint2">Un proyecto cerrado queda en modo consulta: se conserva su historia y no admite nuevas inspecciones.</p></div>'+
+      '<div class="detail" style="gap:10px"><h4 style="font-size:20px">Nuevo proyecto</h4><div class="form-inline"><label style="position:absolute;left:-9999px" for="pj-name">Nombre</label><input class="mini-in" id="pj-name" placeholder="Nombre" value="'+esc(np.name)+'"><label style="position:absolute;left:-9999px" for="pj-sap">Código SAP</label><input class="mini-in" id="pj-sap" placeholder="Código SAP" value="'+esc(np.sap)+'"><label style="position:absolute;left:-9999px" for="pj-cli">Cliente</label><input class="mini-in" id="pj-cli" placeholder="Cliente" value="'+esc(np.cliente)+'"><button class="btn-dark" style="min-height:40px" data-w="addProj">Crear</button></div><p class="hint2">En el MVP se cargan manualmente; a futuro, desde SAP.</p></div>';
+  }
+  function vEquipos(){
+    var rows=server.equipos.map(function(e){var h=server.hist[e.code],c=!h?'n':h.result==='Apto'?'g':h.result==='No apto'?'r':'y';return '<tr><td style="font-weight:600"><span class="dot '+c+'" style="display:inline-block;vertical-align:middle;margin-right:8px"></span>'+e.code+'</td>'+td(e.desc)+td(e.proj.map(function(p){return server.projects[p].name;}).join(', '))+td(h?h.result+' ('+h.day+')':'Sin inspecciones')+'<td>'+(e.activo?'<span class="tag ok">Activo</span>':'<span class="tag q">Inactivo</span>')+'</td></tr>';}).join('');
+    var imp=W.imp==='val'?'<div class="detail" style="gap:10px;padding:20px"><h4 style="font-size:20px">Validación de equipos_obras.xlsx</h4><p class="hint2">6 filas leídas: <b>4 válidas</b> y <b>2 con errores</b>. Solo se aplican las filas válidas.</p><table class="atable"><thead><tr><th>Fila</th><th>Error</th></tr></thead><tbody><tr><td>4</td><td>Código EX-21 duplicado en el archivo.</td></tr><tr><td>6</td><td>Proyecto OB-9999 inexistente.</td></tr></tbody></table><div class="form-inline"><button class="btn-dark" data-w="applyImp">Aplicar 4 filas válidas</button><button class="btn-soft" data-w="cancelImp">Cancelar</button></div></div>':'';
+    return '<div class="form-inline"><button class="btn-line" data-w="imp">Importar planilla de equipos</button><button class="btn-soft" data-w="qrs">Generar etiquetas QR</button>'+PROP+'</div>'+fl()+imp+
+      '<div class="detail" style="gap:12px"><table class="atable"><thead><tr><th>Código</th><th>Descripción</th><th>Obras</th><th>Última inspección</th><th>Estado</th></tr></thead><tbody>'+rows+'</tbody></table><p class="hint2">Un equipo con inspecciones nunca se elimina: se desactiva y conserva su historial.</p></div>';
+  }
+  function draftFrom(k){var t=server.templates[k],v=vigV(t);return {name:t.name,projects:t.projects.slice(),equipo:v.equipo,fields:clone(v.fields),conds:clone(v.conds),obsReq:v.obsReq.slice(),items:v.items.slice(),newItem:'',newField:{label:'',type:'Texto',req:true},newCond:{c:'',m:''}};}
+  function vPlant(){
+    if(!W.draft)W.draft=draftFrom(W.tplSel);
+    var t=server.templates[W.tplSel],D=W.draft,cur=vigV(t);
+    var list=Object.keys(server.templates).map(function(k){var x=server.templates[k];return '<button class="tplitem" data-w="tpl" data-v="'+k+'" aria-pressed="'+(W.tplSel===k)+'"><span style="font-weight:600">'+x.name+'</span><span class="vtag">'+x.code+' · v'+vigV(x).v+' vigente</span></button>';}).join('');
+    var fields=D.fields.map(function(f,i){return '<div class="row3"><span style="min-width:150px;font-size:14px;font-weight:600">'+esc(f.label)+'</span><span class="chip">'+f.type+'</span><span class="chip">'+(f.req?'Obligatorio':'Opcional')+'</span><button class="ibtn" data-w="delField" data-v="'+i+'" aria-label="Quitar campo '+esc(f.label)+'">✕</button></div>';}).join('');
+    var nf=D.newField;
+    var conds=D.conds.map(function(c,i){var id='or-'+i;return '<label class="ck" for="'+id+'"><input type="checkbox" id="'+id+'" data-obsreq="'+esc(c[0])+'"'+(D.obsReq.indexOf(c[0])>=0?' checked':'')+'><b>'+esc(c[0])+'</b> '+esc(c[1])+'</label>';}).join('');
+    var items=D.items.map(function(x,i){return '<div class="row3"><span style="flex:1;font-size:14px">'+(i+1)+'. '+esc(x)+'</span><button class="ibtn" data-w="up" data-v="'+i+'" aria-label="Subir">↑</button><button class="ibtn" data-w="down" data-v="'+i+'" aria-label="Bajar">↓</button><button class="ibtn" data-w="delItem" data-v="'+i+'" aria-label="Quitar">✕</button></div>';}).join('');
+    var pr=Object.keys(server.projects).map(function(p){return '<label class="ck" for="tp-'+p+'"><input type="checkbox" id="tp-'+p+'" data-tp="'+p+'"'+(D.projects.indexOf(p)>=0?' checked':'')+'>'+server.projects[p].name+'</label>';}).join('');
+    var vers=t.versions.slice().reverse().map(function(x){var tag=x.estado==='Vigente'?'<span class="tag ok">Vigente</span>':x.estado==='Programada'?'<span class="tag" style="background:#DCE6F7;color:#173F86">Programada</span>':'<span class="tag q">Vencida</span>';return '<tr>'+td('Versión '+x.v)+td(x.items.length+' ítems · '+x.fields.length+(x.fields.length===1?' campo':' campos'))+'<td>'+tag+'</td>'+td(x.corte?'Corte '+x.corte:x.estado==='Programada'?'Vigente desde 00:00':'Sin corte')+'</tr>';}).join('');
+    var prev='<div class="prev" aria-label="Vista previa en el teléfono"><div class="scr"><div class="t">'+esc(D.name)+'</div>'+(D.equipo?'<div class="hist"><span class="dot n"></span>Equipo del maestro</div>':'')+D.fields.map(function(f){return '<div style="font-size:12px;color:var(--soft);font-weight:600">'+esc(f.label)+(f.req?' *':'')+'<div class="mini-in" style="display:flex;align-items:center;margin-top:4px;color:#A9A49A;font-weight:400">'+f.type+'</div></div>';}).join('')+
+      D.items.slice(0,3).map(function(x,i){return '<div class="irow" style="padding:10px;gap:6px"><div style="font-size:13px;font-weight:600">'+(i+1)+'. '+esc(x)+'</div><div class="conds">'+D.conds.map(function(c){return '<span class="cond'+(D.obsReq.indexOf(c[0])>=0?' bad':'')+'" style="min-width:34px;min-height:30px;display:inline-flex;align-items:center;justify-content:center;font-size:12px">'+esc(c[0])+'</span>';}).join('')+'</div></div>';}).join('')+(D.items.length>3?'<div class="hint2">y '+(D.items.length-3)+' ítems más</div>':'')+'</div></div>';
+    return '<div style="display:flex;flex-direction:column;gap:16px"><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch">'+list+'<div class="hint2" style="align-self:center">Las plantillas F-SSyMA-Verif existentes se pueden migrar como servicio opcional.</div></div>'+fl()+'<div class="bld"><div class="detail" style="gap:14px">'+
+      '<div><h4 style="font-size:24px">Editor de plantilla</h4><p class="sub">'+t.code+' · vigente: versión '+cur.v+'. Los cambios se publican como una nueva versión.</p></div>'+
+      '<div class="field"><label for="d-name">Nombre</label><input class="mini-in" id="d-name" value="'+esc(D.name)+'"></div>'+
+      '<label class="ck" for="d-eq"><input type="checkbox" id="d-eq"'+(D.equipo?' checked':'')+'>Vincular con un equipo del maestro</label>'+
+      '<div class="field"><span class="lbl">Campos identificatorios</span>'+fields+'<div class="row3"><label style="position:absolute;left:-9999px" for="nf-l">Nuevo campo</label><input class="mini-in" id="nf-l" placeholder="Nuevo campo" value="'+esc(nf.label)+'">'+sel('nf-t',FTYPES,nf.type,'Tipo','mini-in')+'<label class="ck" for="nf-r"><input type="checkbox" id="nf-r"'+(nf.req?' checked':'')+'>Obligatorio</label><button class="btn-soft" style="min-height:38px" data-w="addField">Agregar</button></div></div>'+
+      '<div class="field"><span class="lbl">Catálogo de condiciones (marcadas: exigen observación)</span><div class="row3">'+conds+'</div><div class="row3"><label style="position:absolute;left:-9999px" for="nc-c">Código</label><input class="mini-in" style="width:80px" id="nc-c" placeholder="Código" value="'+esc(D.newCond.c)+'"><label style="position:absolute;left:-9999px" for="nc-m">Significado</label><input class="mini-in" id="nc-m" placeholder="Significado" value="'+esc(D.newCond.m)+'"><button class="btn-soft" style="min-height:38px" data-w="addCond">Agregar condición</button></div></div>'+
+      '<div class="field"><span class="lbl">Ítems de inspección</span>'+items+'<div class="row3"><label style="position:absolute;left:-9999px" for="ni">Nuevo ítem</label><input class="mini-in" style="flex:1" id="ni" placeholder="Nuevo ítem" value="'+esc(D.newItem)+'"><button class="btn-soft" style="min-height:38px" data-w="addItem">Agregar ítem</button></div></div>'+
+      '<div class="field"><span class="lbl">Proyectos habilitados</span><div class="row3">'+pr+'</div></div>'+
+      '<div class="field"><span class="lbl">Fecha de corte de la versión '+cur.v+'</span>'+sel('corte',[['Ahora','Inmediata: la nueva versión rige desde ya'],['Fin','Hoy a las 23:59: la nueva versión rige desde mañana']],W.corte,'Fecha de corte','mini-in')+'</div>'+
+      '<div class="form-inline"><button class="btn-dark" data-w="publish">Publicar versión '+(t.versions[t.versions.length-1].v+1)+'</button><button class="btn-soft" data-w="discard">Descartar cambios</button></div></div>'+
+      '<div style="display:flex;flex-direction:column;gap:8px"><span class="hint2" style="font-weight:600">Vista previa en el teléfono</span>'+prev+'</div></div>'+
+      '<div class="detail" style="gap:10px"><h4 style="font-size:20px">Versiones</h4><table class="atable"><thead><tr><th>Versión</th><th>Contenido</th><th>Estado</th><th>Vigencia</th></tr></thead><tbody>'+vers+'</tbody></table><p class="hint2">Cada inspección guarda una copia de la versión con la que se completó: siempre se puede reconstruir cómo se respondió.</p></div></div></div>';
+  }
+  function vProg(){
+    var rows=server.sched.map(function(s){return '<tr>'+td(server.templates[s.tpl].name)+td(server.projects[s.proj].name)+td(pName(s.user))+td(s.freq)+td(s.when)+'</tr>';}).join('');var np=W.np;
+    return '<div class="detail" style="gap:12px"><h4 style="font-size:22px">Programar inspección</h4><div class="form-inline">'+
+      sel('np-tpl',Object.keys(server.templates).map(function(k){return [k,server.templates[k].name];}),np.tpl,'Plantilla')+sel('np-proj',projOpts().filter(function(o){return server.projects[o[0]].estado==='Activo';}),np.proj,'Obra')+
+      sel('np-user',Object.keys(server.people).filter(function(k){return server.people[k].activo;}).map(function(k){return [k,server.people[k].name];}),np.user,'Inspector')+sel('np-freq',['Única','Diaria','Semanal, jueves','Mensual'],np.freq,'Periodicidad')+
+      '<button class="btn-dark" data-w="prog">Programar desde hoy</button></div>'+fl()+'<p class="hint2">Si la asignás a Juan Pérez, aparece en el calendario de su teléfono.</p></div>'+
+      '<div class="detail" style="gap:12px"><h4 style="font-size:22px">Programaciones vigentes</h4><table class="atable"><thead><tr><th>Plantilla</th><th>Obra</th><th>Inspector</th><th>Periodicidad</th><th>Próxima</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  }
+  function filtered(){var f=W.f;return server.insps.filter(function(i){return i.synced&&(f.p==='todos'||i.proj===f.p)&&(f.t==='todos'||i.tpl===f.t)&&(f.u==='todos'||i.user===f.u)&&(f.e==='todos'||i.target===f.e)&&(f.r==='todos'||i.result===f.r)&&(f.per==='todos'||(f.per==='hoy'?i.dayN===0:i.dayN<=7));});}
+  function vDetail(){
+    var i=server.insps.filter(function(x){return x.uid===W.detail;})[0];if(!i)return '';var t=server.templates[i.tpl],fm=i.form;
+    var ans=fm.items.map(function(q,k){var a=fm.ans[k]||{};return '<tr>'+td(esc(q))+td('<b>'+esc(a.c||'')+'</b>')+td(esc(a.obs||''))+'</tr>';}).join('');
+    var hist=i.history.length?i.history.map(function(h){return '<div>'+h.t+' · '+esc(h.actor)+' cambió '+h.campo+': <b>'+esc(h.antes)+'</b> a <b>'+esc(h.despues)+'</b>. Motivo: '+esc(h.motivo)+'</div>';}).join(''):'<div>Sin cambios posteriores a la sincronización.</div>';
+    return '<div class="detail" style="gap:12px"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center"><h4 style="font-size:22px">'+i.id+' · '+t.name+'</h4><button class="btn-soft" data-w="closeDetail">Cerrar</button></div>'+
+      '<p class="hint2">'+server.projects[i.proj].name+' · '+esc(i.target)+' · Inspector: '+pName(i.user)+' · Versión '+i.ver+' de '+t.code+' (copia conservada) · Hora local '+i.local+' · Servidor '+i.server+'</p>'+
+      '<table class="atable ansT"><thead><tr><th>Ítem</th><th>Condición</th><th>Observación</th></tr></thead><tbody>'+ans+'</tbody></table>'+
+      '<div style="font-size:14px">Resultado: <b>'+i.result+'</b></div><div class="field"><span class="lbl">Historial de cambios</span><div class="log">'+hist+'</div></div>'+
+      '<div class="form-inline">'+sel('cr-res',RESULTS,i.result,'Nuevo resultado')+'<label style="position:absolute;left:-9999px" for="cr-mot">Motivo</label><input class="mini-in" style="flex:1;min-width:220px" id="cr-mot" placeholder="Motivo de la corrección (obligatorio)"><button class="btn-dark" data-w="correct" data-v="'+i.uid+'">Corregir y observar</button></div></div>';
+  }
+  function vRep(){
+    var f=W.f,rows=filtered().map(function(i){return '<tr><td style="font-weight:600">'+i.id+'</td>'+td(i.day)+td(server.projects[i.proj].name)+td(server.templates[i.tpl].code+' v'+i.ver)+td(esc(i.target))+td(pName(i.user))+td(i.result)+'<td>'+(i.observed?'<span class="st obs">Observada</span>':'')+'</td><td><button class="btn-soft" style="min-height:36px;padding:0 10px;font-size:13px" data-w="detail" data-v="'+i.uid+'">Ver</button></td></tr>';}).join('');
+    var eqs=uniq(server.insps.map(function(i){return i.target;})).filter(Boolean);
+    return '<div class="detail" style="gap:12px"><div class="form-inline">'+sel('f-p',[['todos','Todas las obras']].concat(projOpts()),f.p,'Obra')+sel('f-t',[['todos','Todas las plantillas']].concat(Object.keys(server.templates).map(function(k){return [k,server.templates[k].name];})),f.t,'Plantilla')+
+      sel('f-e',[['todos','Todos los equipos o sectores']].concat(eqs.map(function(x){return [x,x];})),f.e,'Equipo')+sel('f-u',[['todos','Todos los inspectores']].concat(Object.keys(server.people).map(function(k){return [k,server.people[k].name];})),f.u,'Inspector')+
+      sel('f-per',[['todos','Todo el período'],['hoy','Hoy'],['7','Últimos 7 días']],f.per,'Período')+sel('f-r',[['todos','Todos los resultados']].concat(RESULTS.map(function(r){return [r,r];})),f.r,'Resultado')+'</div>'+
+      '<div class="form-inline"><button class="btn-line" data-w="exp" data-v="Excel">Exportar a Excel</button><button class="btn-line" data-w="exp" data-v="PDF">Exportar a PDF</button><span class="hint2">Cada usuario ve solo las obras de su ámbito.</span></div>'+fl()+
+      '<table class="atable"><thead><tr><th>N.º</th><th>Fecha</th><th>Obra</th><th>Plantilla</th><th>Equipo o sector</th><th>Inspector</th><th>Resultado</th><th></th><th></th></tr></thead><tbody>'+(rows||'<tr><td colspan="9">Sin resultados para estos filtros.</td></tr>')+'</tbody></table></div>'+vDetail();
+  }
+  function vRev(){
+    var items=server.review.map(function(r){var vv=r.type==='Versión vencida';return '<div class="detail" style="gap:12px;padding:22px"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center"><h4 style="font-size:22px">'+esc(r.title)+'</h4><span class="st '+(r.done?'ok':'q')+'">'+(r.done?'Resuelto':r.type)+'</span></div><p class="hint2">'+esc(r.desc)+'</p>'+
+      '<div class="versions"><div class="ver"><div class="h">'+(vv?'Inspección recibida':'Primera en sincronizar')+'</div><div style="font-size:14px">'+esc(r.a)+'</div></div><div class="ver rev"><div class="h">'+(vv?'Situación':'Posible duplicado')+'</div><div style="font-size:14px">'+esc(r.b)+'</div></div></div>'+
+      (r.done?'<div class="result">'+esc(r.done)+'</div>':vv?'<div class="actions"><button class="btn-dark" data-w="res" data-v="'+r.id+'" data-r="Aceptada con su versión original.">Aceptar con versión original</button><button class="btn-soft" data-w="res" data-v="'+r.id+'" data-r="Inspección observada para revisar con la versión vigente.">Observar</button></div>':
+        '<div class="actions"><button class="btn-dark" data-w="res" data-v="'+r.id+'" data-r="Se mantienen ambas inspecciones como válidas.">Mantener ambas</button><button class="btn-line" data-w="res" data-v="'+r.id+'" data-r="La segunda inspección quedó marcada como duplicada, sin eliminarse.">Marcar como duplicada</button></div>')+'</div>';}).join('');
+    return items||'<div class="infonote">No hay casos pendientes de revisión.</div>';
+  }
+  function vAudit(){return '<div class="detail" style="gap:12px"><table class="atable"><thead><tr><th>Fecha</th><th>Evento</th></tr></thead><tbody>'+server.audit.map(function(l){return '<tr><td style="white-space:nowrap">'+l.t+'</td><td>'+esc(l.x)+'</td></tr>';}).join('')+'</tbody></table><p class="hint2">Registro resistente a modificaciones ordinarias: actor, fecha y hora, origen, entidad, valores previos y nuevos, y motivo.</p></div>';}
+  var TABS={panel:['Panel de cumplimiento','Estado del día en cada obra.',vPanel,true],personas:['Personas y accesos','Alta manual, roles por obra y consulta de permisos.',vPersonas],proyectos:['Proyectos','Obras, estado y aplicaciones habilitadas.',vProyectos],equipos:['Equipos','Maestro de equipos y su relación con las obras.',vEquipos],
+    plant:['Plantillas','Editor de inspecciones con versionado y fecha de corte.',vPlant],prog:['Programación','Inspecciones programadas para cada inspector.',vProg],rep:['Reportes','Inspecciones sincronizadas, detalle y correcciones.',vRep],rev:['Bandeja de revisión','Casos que requieren una decisión del administrador.',vRev],audit:['Auditoría','Quién hizo cada cambio y cuándo.',vAudit]};
+  function renderWeb(){
+    var pr=server.review.filter(function(r){return !r.done;}).length;
+    web.innerHTML='<aside class="side"><div class="b"><img class="sd-logo" src="'+LOGO+'" alt="Milicic"><span>Plataforma central</span></div><nav aria-label="Plataforma web">'+Object.keys(TABS).map(function(k){var c=W.tab===k;return '<button data-tab="'+k+'" class="'+(c?'cur':'')+'"'+(c?' aria-current="page"':'')+'>'+TABS[k][0]+(k==='rev'&&pr?'<span class="badge">'+pr+'</span>':'')+(TABS[k][3]?'<span class="prop">Propuesta</span>':'')+'</button>';}).join('')+'</nav></aside>'+
+      '<div class="main"><div><h3>'+TABS[W.tab][0]+'</h3><p class="sub">'+TABS[W.tab][1]+'</p></div>'+TABS[W.tab][2]()+'</div>';
+  }
+  web.addEventListener('toggle',function(e){if(e.target.id==='techdet')W.techOpen=e.target.open;},true);
+  web.addEventListener('input',function(e){var id=e.target.id,v=e.target.value,D=W.draft;
+    if(id==='np-name')W.newP.name=v;else if(id==='np-leg')W.newP.legajo=v;else if(id==='pj-name')W.newProj.name=v;else if(id==='pj-sap')W.newProj.sap=v;else if(id==='pj-cli')W.newProj.cliente=v;
+    else if(D&&id==='d-name'){D.name=v;var pt=document.querySelector('.prev .t');if(pt)pt.textContent=v;}
+    else if(D&&id==='nf-l')D.newField.label=v;else if(D&&id==='nc-c')D.newCond.c=v;else if(D&&id==='nc-m')D.newCond.m=v;else if(D&&id==='ni')D.newItem=v;});
+  web.addEventListener('click',function(e){
+    var t=e.target.closest('[data-tab]');if(t){W.tab=t.getAttribute('data-tab');renderWeb();return;}
+    var b=e.target.closest('[data-w]');if(!b)return;var a=b.getAttribute('data-w'),v=b.getAttribute('data-v'),D=W.draft;
+    if(a==='person'){W.person=v;}
+    else if(a==='addPerson'){var n=W.newP.name.trim(),l=W.newP.legajo.trim();
+      if(!n||!l)W.flash={ok:false,t:'Completá nombre y legajo.'};
+      else if(Object.keys(server.people).some(function(k){return server.people[k].legajo===l;}))W.flash={ok:false,t:'Ya existe una persona con el legajo '+l+'. La plataforma no permite duplicados.'};
+      else{var id='p'+hex();server.people[id]={name:n,short:n,legajo:l,activo:true};server.assign[id]={};Object.keys(server.projects).forEach(function(p){server.assign[id][p]=[];});W.person=id;W.newP={name:'',legajo:''};audit('Alta manual de persona: '+n+' (legajo '+l+').');W.flash={ok:true,t:n+' quedó registrada, sin acceso hasta que se le asigne un rol.'};}}
+    else if(a==='revoke'){server.people.jperez.activo=false;audit('Admin. interno revocó el acceso de J. Pérez y solicitó el borrado de datos del dispositivo.');W.flash=S.online?{ok:true,t:'Acceso revocado. El teléfono envió lo pendiente y borró sus datos locales.'}:{ok:false,t:'Acceso revocado. El borrado se aplicará cuando el teléfono se conecte.'};serverChanged();return;}
+    else if(a==='deact'){server.people[W.person].activo=false;audit('Baja lógica de '+server.people[W.person].name+'. Se conserva su historial.');}
+    else if(a==='reactivate'){server.people[W.person].activo=true;audit('Reactivación de '+server.people[W.person].name+'.');W.flash={ok:true,t:'Persona reactivada.'+(W.person==='jperez'?' Puede volver a iniciar sesión con conexión.':'')};}
+    else if(a==='close'||a==='reopen'){server.projects[v].estado=a==='close'?'Cerrado':'Activo';audit((a==='close'?'Cierre':'Reapertura')+' del proyecto '+server.projects[v].name+'.');W.flash=phoneNote();serverChanged();return;}
+    else if(a==='addProj'){var np=W.newProj;if(!np.name.trim()||!np.sap.trim())W.flash={ok:false,t:'Completá al menos nombre y código SAP.'};else{var pid='pj'+hex();server.projects[pid]={name:np.name,sap:np.sap,cliente:np.cliente||'Sin informar',inicio:'01/10/2026',fin:'A definir',estado:'Activo',sh:false};Object.keys(server.assign).forEach(function(k){server.assign[k][pid]=[];});audit('Alta del proyecto '+np.name+' ('+np.sap+').');W.newProj={name:'',sap:'',cliente:''};W.flash={ok:true,t:'Proyecto creado. Habilitá las aplicaciones que vaya a usar.'};}}
+    else if(a==='imp')W.imp='val';
+    else if(a==='cancelImp')W.imp=null;
+    else if(a==='applyImp'){W.imp=null;server.equipos.push({code:'EX-30',desc:'Excavadora 35 t',proj:['anelo'],activo:true},{code:'RE-02',desc:'Retroexcavadora',proj:['anelo','sanjuan'],activo:true},{code:'GR-05',desc:'Grúa móvil',proj:['sanjuan'],activo:true},{code:'CA-11',desc:'Camión cisterna',proj:['anelo'],activo:true});audit('Importación de equipos_obras.xlsx: 4 filas aplicadas, 2 rechazadas.');W.flash={ok:true,t:'Se aplicaron 4 equipos. Las 2 filas con errores no se cargaron.'};serverChanged();return;}
+    else if(a==='qrs'){W.flash={ok:true,t:'Se generaría un PDF con una etiqueta QR por equipo, para pegar en cada máquina. En el teléfono, el inspector la escanea y abre el equipo correcto.'};}
+    else if(a==='tpl'){W.tplSel=v;W.draft=draftFrom(v);}
+    else if(a==='discard'){W.draft=draftFrom(W.tplSel);}
+    else if(a==='addField'){if(D.newField.label.trim()){var nf={label:D.newField.label.trim(),type:D.newField.type,req:D.newField.req};if(nf.type==='Lista de opciones')nf.opts=['Opción 1','Opción 2','Opción 3'];D.fields.push(nf);D.newField={label:'',type:'Texto',req:true};}}
+    else if(a==='delField'){D.fields.splice(+v,1);}
+    else if(a==='addCond'){var c=D.newCond.c.trim().toUpperCase(),m=D.newCond.m.trim();if(c&&m&&!D.conds.some(function(x){return x[0]===c;})){D.conds.push([c,m]);D.newCond={c:'',m:''};}}
+    else if(a==='addItem'){if(D.newItem.trim()){D.items.push(D.newItem.trim());D.newItem='';}}
+    else if(a==='delItem'){if(D.items.length>1)D.items.splice(+v,1);}
+    else if(a==='up'){var i=+v;if(i>0){var x=D.items[i];D.items[i]=D.items[i-1];D.items[i-1]=x;}}
+    else if(a==='down'){var j=+v;if(j<D.items.length-1){var y=D.items[j];D.items[j]=D.items[j+1];D.items[j+1]=y;}}
+    else if(a==='publish'){var tp=server.templates[W.tplSel],cur=vigV(tp),nv=tp.versions[tp.versions.length-1].v+1;tp.name=D.name;tp.projects=D.projects.slice();
+      tp.versions.forEach(function(x){if(x.estado==='Programada')x.estado='Vencida';});
+      var nvo={v:nv,estado:W.corte==='Ahora'?'Vigente':'Programada',corte:null,equipo:D.equipo,fields:clone(D.fields),conds:clone(D.conds),obsReq:D.obsReq.slice(),items:D.items.slice()};
+      if(W.corte==='Ahora'){cur.estado='Vencida';cur.corte='1 oct '+now();}else{cur.corte='1 oct 23:59';}
+      tp.versions.push(nvo);audit('Admin. de aplicación publicó la versión '+nv+' de '+tp.code+(W.corte==='Ahora'?'; la versión '+cur.v+' venció de inmediato.':'; la versión '+cur.v+' vence hoy a las 23:59.'));
+      W.draft=draftFrom(W.tplSel);W.flash=W.corte==='Ahora'?phoneNote():{ok:true,t:'Versión '+nv+' publicada. Hoy se sigue usando la versión '+cur.v+'; la nueva rige desde mañana.'};serverChanged();return;}
+    else if(a==='prog'){var p2=W.np;server.sched.push({id:'s'+hex(),proj:p2.proj,tpl:p2.tpl,user:p2.user,freq:p2.freq,when:'Hoy'});audit('Admin. de aplicación programó '+server.templates[p2.tpl].name+' para '+pName(p2.user)+' en '+server.projects[p2.proj].name+'.');W.flash=p2.user==='jperez'?phoneNote():{ok:true,t:'Inspección programada.'};serverChanged();return;}
+    else if(a==='exp'){W.flash={ok:true,t:'En el prototipo la exportación a '+v+' es simulada: se genera con los '+filtered().length+' registros filtrados.'};}
+    else if(a==='detail'){W.detail=v;}
+    else if(a==='closeDetail'){W.detail=null;}
+    else if(a==='correct'){var ins=server.insps.filter(function(x){return x.uid===v;})[0],nr=document.getElementById('cr-res').value,mo=document.getElementById('cr-mot').value.trim();
+      if(!mo){W.flash={ok:false,t:'El motivo es obligatorio para corregir una inspección.'};}
+      else if(nr===ins.result){W.flash={ok:false,t:'Elegí un resultado distinto al actual.'};}
+      else{ins.history.push({t:'1 oct '+now(),actor:'Admin. de aplicación',campo:'Resultado',antes:ins.result,despues:nr,motivo:mo});audit('Corrección de '+ins.id+': resultado '+ins.result+' a '+nr+'. Motivo: '+mo);ins.result=nr;ins.observed=true;W.flash={ok:true,t:'Inspección corregida y marcada como Observada. El cambio quedó en su historial.'};if(ins.user==='jperez'&&S.online&&S.known)render();}}
+    else if(a==='res'){var r=server.review.filter(function(x){return x.id===v;})[0];r.done=b.getAttribute('data-r');audit('Revisión resuelta ('+r.type+', '+r.title+'): '+r.done);}
+    renderWeb();
+  });
+  web.addEventListener('change',function(e){
+    var el=e.target,id=el.id,D=W.draft;
+    if(id==='qp')W.qp=el.value;
+    else if(id.indexOf('f-')===0)W.f[id.slice(2)]=el.value;
+    else if(id.indexOf('np-')===0&&id!=='np-name'&&id!=='np-leg')W.np[id.slice(3)]=el.value;
+    else if(id==='corte')W.corte=el.value;
+    else if(D&&id==='d-eq')D.equipo=el.checked;
+    else if(D&&id==='nf-t'){D.newField.type=el.value;return;}
+    else if(D&&id==='nf-r'){D.newField.req=el.checked;return;}
+    else if(D&&el.getAttribute('data-obsreq')){var c=el.getAttribute('data-obsreq');if(el.checked){if(D.obsReq.indexOf(c)<0)D.obsReq.push(c);}else D.obsReq=D.obsReq.filter(function(x){return x!==c;});}
+    else if(D&&el.getAttribute('data-tp')){var p=el.getAttribute('data-tp');if(el.checked){if(D.projects.indexOf(p)<0)D.projects.push(p);}else D.projects=D.projects.filter(function(x){return x!==p;});}
+    else if(el.getAttribute('data-sh')){var pp=el.getAttribute('data-sh');server.projects[pp].sh=el.checked;audit((el.checked?'Habilitación':'Deshabilitación')+' de Seguridad e Higiene en '+server.projects[pp].name+'.');W.flash=phoneNote();serverChanged();return;}
+    else if(el.getAttribute('data-role')){var parts=el.getAttribute('data-role').split('|'),pj=parts[0],rl=parts[1],arr=server.assign[W.person][pj];
+      if(el.checked){if(arr.indexOf(rl)<0)arr.push(rl);}else server.assign[W.person][pj]=arr.filter(function(x){return x!==rl;});
+      W.qp=pj;audit('Admin. cambió los roles de '+server.people[W.person].name+' en '+server.projects[pj].name+': '+(server.assign[W.person][pj].join(' + ')||'sin roles')+'.');
+      if(W.person==='jperez'){W.flash=phoneNote();serverChanged();var f=document.getElementById(id);if(f)f.focus();return;}}
+    else if(id==='np-name'||id==='np-leg'||id==='pj-name'||id==='pj-sap'||id==='pj-cli'||id==='nf-l'||id==='nc-c'||id==='nc-m'||id==='ni'||id==='d-name'||id==='cr-mot'||id==='cr-res')return;
+    renderWeb();
+  });
+
+  render();renderWeb();
+})();
+</script>
+</body>
+</html>
